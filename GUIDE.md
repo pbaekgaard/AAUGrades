@@ -44,10 +44,12 @@ Tasks that have been succesfully completed. If i have done the workflow actions 
 
 #### Refactoring Backlog Tasks
 
-To refactor a backlog task, simply open the task by clicking the title and create a list of subtasks. this is done by:
+To refactor a backlog task, simply open the task by clicking the title and create a list of subtasks as a comment. This is done by:
 
 ```TEXT
 - [ ] Subtask Description
 ```
+
+All subtasks will be in one comment, so we just edit the same comment.
 
 Subtasks should be smaller programming tasks. All subtasks should fulfill the Backlog Task title.
