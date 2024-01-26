@@ -53,3 +53,12 @@ To refactor a backlog task, simply open the task by clicking the title and creat
 All subtasks will be in one comment, so we just edit the same comment.
 
 Subtasks should be smaller programming tasks. All subtasks should fulfill the Backlog Task title.
+
+## Pull Requests
+
+When creating a pull request for a branch to be pulled into main. The Backlog task should be complete. In the event. Write a description when creating the pull request containing one of the following words:
+ - close
+ - closes
+ - closed
+
+This makes the issue automatically close, and also moves the task to the Done part of the kanban board.
