@@ -11,5 +11,6 @@ The guideline / code of conduct can be read [here](/GUIDE.md)
 
 ## Creators
 This app has been developed by two students at Aalborg University
-Peter Bækgaard: [@pbaekgaard](https://github.com/pbaekgaard)
-Simon Skelkjær: [Simo205j](https://github.com/Simo205j)
+
+- Peter Bækgaard: [@pbaekgaard](https://github.com/pbaekgaard)
+- Simon Skelkjær: [@Simo205j](https://github.com/Simo205j)
