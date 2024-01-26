@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 ThemeData light = ThemeData.from(
   colorScheme: const ColorScheme.light(
       brightness: Brightness.light,
-      background: Color(0xFFFFFFFF),
+      background: Color(0xFFfdfdfd),
       onBackground: Color(0xFF4a4a4a),
       secondary: Color(0xFF00FFD1),
       onSecondary: Color(0xFF7e7e7e),
