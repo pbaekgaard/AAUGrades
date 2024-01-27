@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData light = ThemeData.from(
   colorScheme: const ColorScheme.light(
@@ -15,17 +16,18 @@ ThemeData light = ThemeData.from(
 );
 
 ThemeData dark = ThemeData.from(
-    colorScheme: const ColorScheme.dark(
-  brightness: Brightness.dark,
-  background: Color(0xFF363636),
-  onBackground: Color(0xFFFFFFFF),
-  secondary: Color(0xFF00FFD1),
-  onSecondary: Color(0xFF7e7e7e),
-  secondaryContainer: Color(0xFF444444),
-  primary: Color(0xFF28EECA),
-  primaryContainer: Color(0xFF3f3f3f),
-  tertiary: Color.fromARGB(255, 50, 197, 55),
-));
+  colorScheme: const ColorScheme.dark(
+    brightness: Brightness.dark,
+    background: Color(0xFF363636),
+    onBackground: Color(0xFFFFFFFF),
+    secondary: Color(0xFF00FFD1),
+    onSecondary: Color(0xFF7e7e7e),
+    secondaryContainer: Color(0xFF444444),
+    primary: Color(0xFF28EECA),
+    primaryContainer: Color(0xFF3f3f3f),
+    tertiary: Color.fromARGB(255, 50, 197, 55),
+  ),
+);
 
 class ThemeService with ChangeNotifier {
   ThemeMode? _themeMode;
