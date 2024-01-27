@@ -1,20 +1,30 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:stads/config/Themes.dart';
+import 'package:stads/pages/SignInPage.dart';
+import 'package:stads/providers/Themes.dart';
 import 'package:stads/pages/SettingsPage.dart';
 import 'package:stads/pages/StatisticsPage.dart';
 import 'package:stads/pages/AllGradesPage.dart';
+import 'package:stads/providers/AuthProvider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
       statusBarColor: Colors.transparent));
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeService>(
+            create: (context) => ThemeService()),
+        ChangeNotifierProvider<AuthProvider>(
+            create: (context) => AuthProvider()),
+      ],
+      builder: (context, _) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -62,9 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  _signOut() async {
-    setState(() {});
-  }
+  bool _isLoggedIn = false;
 
   int _selectedIndex = 1;
   void _onItemTapped(int index) {
@@ -80,6 +88,11 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -87,56 +100,96 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            "AAU GRADES",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-          ),
-          actions: [
-            Container(
-              padding: EdgeInsets.only(right: 24),
-              child: _selectedIndex != 2
-                  ? IconButton(
-                      onPressed: _refreshDatabase, icon: Icon(Icons.refresh))
-                  : IconButton(icon: Icon(Icons.logout), onPressed: _signOut),
-            )
-          ],
-        ),
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsetsDirectional.symmetric(horizontal: 24),
-            child: _pages[_selectedIndex]),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              border: Border(
-                  top: BorderSide(
-                      width: 2,
-                      color:
-                          Theme.of(context).colorScheme.secondaryContainer))),
-          child: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list),
-                label: 'Grades',
+
+    final authProvider = Provider.of<AuthProvider>(context);
+    _signOut() async {
+      await authProvider.logout();
+    }
+
+    return FutureBuilder(
+        future: authProvider.isLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: const Text(
+                  "AAU GRADES",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                ),
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.show_chart),
-                label: 'Statistics',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: "Settings",
-              )
-            ],
-            onTap: _onItemTapped,
-            currentIndex: _selectedIndex,
-          ),
-        )
-        // This trailing comma makes auto-formatting nicer for build methods.
-        );
+              body: CircularProgressIndicator(),
+            );
+          } else {
+            final bool isLoggedIn = snapshot.data ?? false;
+            if (!isLoggedIn) {
+              return Scaffold(
+                  appBar: AppBar(
+                      centerTitle: true,
+                      title: const Text(
+                        "AAU GRADES",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22),
+                      )),
+                  body: SignInPage());
+            } else {
+              return Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: Text(
+                      "AAU GRADES",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                    ),
+                    actions: [
+                      Container(
+                        padding: EdgeInsets.only(right: 24),
+                        child: _selectedIndex != 2
+                            ? IconButton(
+                                onPressed: _refreshDatabase,
+                                icon: Icon(Icons.refresh))
+                            : IconButton(
+                                icon: Icon(Icons.logout), onPressed: _signOut),
+                      )
+                    ],
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  body: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 24),
+                      child: _pages[_selectedIndex]),
+                  bottomNavigationBar: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        border: Border(
+                            top: BorderSide(
+                                width: 2,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer))),
+                    child: BottomNavigationBar(
+                      items: const <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.list),
+                          label: 'Grades',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.show_chart),
+                          label: 'Statistics',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.settings),
+                          label: "Settings",
+                        )
+                      ],
+                      onTap: _onItemTapped,
+                      currentIndex: _selectedIndex,
+                    ),
+                  )
+                  // This trailing comma makes auto-formatting nicer for build methods.
+                  );
+            }
+          }
+        });
   }
 }
