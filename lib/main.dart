@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:stads/config/Themes.dart';
 import 'package:stads/pages/SettingsPage.dart';
@@ -55,7 +58,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  _refreshDatabase() async {
+    setState(() {});
+  }
+
+  _signOut() async {
+    setState(() {});
+  }
+
+  int _selectedIndex = 1;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -77,12 +88,27 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        appBar: AppBar(title: Center(child: Text(widget.title))),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "AAU GRADES",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          ),
+          actions: [
+            Container(
+              padding: EdgeInsets.only(right: 24),
+              child: _selectedIndex != 2
+                  ? IconButton(
+                      onPressed: _refreshDatabase, icon: Icon(Icons.refresh))
+                  : IconButton(icon: Icon(Icons.logout), onPressed: _signOut),
+            )
+          ],
+        ),
         backgroundColor: Theme.of(context).colorScheme.background,
         body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          child: _pages[_selectedIndex],
-        ),
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 24),
+            child: _pages[_selectedIndex]),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
