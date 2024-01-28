@@ -109,86 +109,73 @@ class _MyHomePageState extends State<MyHomePage> {
     return FutureBuilder(
         future: authProvider.isLoggedIn(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          final bool isLoggedIn = snapshot.data ?? false;
+          if (!isLoggedIn) {
             return Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: const Text(
-                  "AAU GRADES",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                ),
-              ),
-              body: CircularProgressIndicator(),
-            );
-          } else {
-            final bool isLoggedIn = snapshot.data ?? false;
-            if (!isLoggedIn) {
-              return Scaffold(
-                  appBar: AppBar(
-                      centerTitle: true,
-                      title: const Text(
-                        "AAU GRADES",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
-                      )),
-                  body: SignInPage());
-            } else {
-              return Scaffold(
-                  appBar: AppBar(
+                appBar: AppBar(
                     centerTitle: true,
-                    title: Text(
+                    title: const Text(
                       "AAU GRADES",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                    ),
-                    actions: [
-                      Container(
-                        padding: EdgeInsets.only(right: 24),
-                        child: _selectedIndex != 2
-                            ? IconButton(
-                                onPressed: _refreshDatabase,
-                                icon: Icon(Icons.refresh))
-                            : IconButton(
-                                icon: Icon(Icons.logout), onPressed: _signOut),
+                    )),
+                body: SignInPage());
+          } else {
+            return Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  title: Text(
+                    "AAU GRADES",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                  ),
+                  actions: [
+                    Container(
+                      padding: EdgeInsets.only(right: 24),
+                      child: _selectedIndex != 2
+                          ? IconButton(
+                              onPressed: _refreshDatabase,
+                              icon: Icon(Icons.refresh))
+                          : IconButton(
+                              icon: Icon(Icons.logout), onPressed: _signOut),
+                    )
+                  ],
+                ),
+                backgroundColor: Theme.of(context).colorScheme.background,
+                body: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 24),
+                    child: _pages[_selectedIndex]),
+                bottomNavigationBar: Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      border: Border(
+                          top: BorderSide(
+                              width: 2,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer))),
+                  child: BottomNavigationBar(
+                    items: const <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.list),
+                        label: 'Grades',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.show_chart),
+                        label: 'Statistics',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.settings),
+                        label: "Settings",
                       )
                     ],
+                    onTap: _onItemTapped,
+                    currentIndex: _selectedIndex,
                   ),
-                  backgroundColor: Theme.of(context).colorScheme.background,
-                  body: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 24),
-                      child: _pages[_selectedIndex]),
-                  bottomNavigationBar: Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        border: Border(
-                            top: BorderSide(
-                                width: 2,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer))),
-                    child: BottomNavigationBar(
-                      items: const <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.list),
-                          label: 'Grades',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.show_chart),
-                          label: 'Statistics',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.settings),
-                          label: "Settings",
-                        )
-                      ],
-                      onTap: _onItemTapped,
-                      currentIndex: _selectedIndex,
-                    ),
-                  )
-                  // This trailing comma makes auto-formatting nicer for build methods.
-                  );
-            }
+                )
+                // This trailing comma makes auto-formatting nicer for build methods.
+                );
           }
         });
   }
