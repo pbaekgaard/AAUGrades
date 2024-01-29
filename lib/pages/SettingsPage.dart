@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:flutter/foundation.dart' as Foundation;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -20,11 +23,6 @@ class _SettingsPageState extends State<SettingsPage> {
   late ThemeMode _themeGroupValue;
   late ThemeService _themeManager;
   String? _version;
-  String? _buildNumber;
-  String? _buildSignature;
-  String? _appName;
-  String? _packageName;
-  String? _installerStore;
 
   static List<DropdownMenuItem> autoFetchOptions = [
     const DropdownMenuItem(
@@ -53,20 +51,14 @@ class _SettingsPageState extends State<SettingsPage> {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final version = packageInfo.version;
-    final buildNumber = packageInfo.buildNumber;
-    final buildSignature = packageInfo.buildSignature;
-    final appName = packageInfo.appName;
-    final packageName = packageInfo.packageName;
-    final installerStore = packageInfo.installerStore;
 
     setState(() {
       _version = version;
-      _buildNumber = buildNumber;
-      _buildSignature = buildSignature;
-      _appName = appName;
-      _packageName = packageName;
-      _installerStore = installerStore;
     });
+  }
+
+  void sendTestNotification() {
+    StadsGradesProvider().SendGradeNotification("TEST NOTIFICATION");
   }
 
   @override
@@ -76,8 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-                child: Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Grade Updates",
@@ -86,80 +77,76 @@ class _SettingsPageState extends State<SettingsPage> {
                         fontSize: 20)),
                 Column(
                   children: [
-                    Container(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Fetch on startup",
-                                  style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                ),
-                                Text(
-                                  "Fetch new grades when opening the app.",
-                                  style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                )
-                              ],
-                            ),
-                            Checkbox(
-                              value: fetchOnStartupEnabled,
-                              onChanged: (value) => {
-                                setState(
-                                  () {
-                                    fetchOnStartupEnabled = value!;
-                                  },
-                                )
-                              },
-                            )
-                          ]),
-                    ),
-                    Container(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Auto-fetching",
-                                  style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                ),
-                                Text(
-                                  "Automatically fetch grades in the background.",
-                                  style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                )
-                              ],
-                            ),
-                            Checkbox(
-                              value: autoFetchEnabled,
-                              onChanged: (value) => {
-                                setState(
-                                  () {
-                                    autoFetchEnabled = value!;
-                                  },
-                                )
-                              },
-                            )
-                          ]),
-                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Fetch on startup",
+                                style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              ),
+                              Text(
+                                "Fetch new grades when opening the app.",
+                                style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              )
+                            ],
+                          ),
+                          Checkbox(
+                            value: fetchOnStartupEnabled,
+                            onChanged: (value) => {
+                              setState(
+                                () {
+                                  fetchOnStartupEnabled = value!;
+                                },
+                              )
+                            },
+                          )
+                        ]),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Auto-fetching",
+                                style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              ),
+                              Text(
+                                "Automatically fetch grades in the background.",
+                                style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              )
+                            ],
+                          ),
+                          Checkbox(
+                            value: autoFetchEnabled,
+                            onChanged: (value) => {
+                              setState(
+                                () {
+                                  autoFetchEnabled = value!;
+                                },
+                              )
+                            },
+                          )
+                        ]),
                     Container(
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +199,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 )
               ],
-            )),
+            ),
             /*
                 NOTIFICATION SECTION
                */
@@ -265,9 +252,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                       },
                                     )
                                   },
-                                )
+                                ),
                               ]),
-                        )
+                        ),
+                        if (Foundation.kDebugMode) ...[
+                          TextButton(
+                              onPressed: sendTestNotification,
+                              child: Text("Send Test Notification"))
+                        ]
                       ],
                     )
                   ],

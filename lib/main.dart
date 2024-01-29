@@ -7,9 +7,21 @@ import 'package:stads/pages/SettingsPage.dart';
 import 'package:stads/pages/StatisticsPage.dart';
 import 'package:stads/pages/AllGradesPage.dart';
 import 'package:stads/providers/AuthProvider.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'stads_channel',
+        channelName: 'Stads Notifications',
+        channelDescription: 'Notification channel for STADS grades',
+      )
+    ],
+    debug: true,
+  );
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
       statusBarColor: Colors.transparent));
@@ -71,8 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  final bool _isLoggedIn = false;
-
   int _selectedIndex = 1;
   void _onItemTapped(int index) {
     setState(() {
@@ -89,6 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) => {
+          if (!isAllowed)
+            {AwesomeNotifications().requestPermissionToSendNotifications()}
+        });
   }
 
   @override
@@ -118,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                     )),
-                body: SignInPage());
+                body: const SignInPage());
           } else {
             return Scaffold(
                 appBar: AppBar(

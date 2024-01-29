@@ -14,13 +14,11 @@ class User {
 Future<bool> authenticateUser(String username, String password) async {
   const loginUrl = 'https://sb.aau.dk/sb-ad/sb';
   const loginForm = 'https://sb.aau.dk/sb-ad/sb/index.jsp';
-  const redirectedUrl = 'https://sb.aau.dk/sb-ad/sb/common/velkommen.jsp';
-  const loginAuthenticationString =
-      "Velkommen til STADS-Selvbetjening på Aalborg Universitet";
+  const redirectedUrl = 'http://sb.aau.dk/sb-ad/sb/common/velkommen.jsp';
 
   final dio = Dio();
   final cookieJar = CookieJar();
-  dio..interceptors.add(CookieManager(cookieJar));
+  dio.interceptors.add(CookieManager(cookieJar));
 
   try {
     await dio.get(loginUrl);
@@ -40,9 +38,8 @@ Future<bool> authenticateUser(String username, String password) async {
             status != null && status >= 200 && status < 400,
       ),
     );
-
     if (loginResponse.statusCode == 302 &&
-        loginResponse.headers['location'] != null) {
+        loginResponse.headers['location']?[0] == redirectedUrl) {
       return true;
     } else {
       return false;
