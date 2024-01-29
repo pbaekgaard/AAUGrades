@@ -6,7 +6,7 @@ ThemeData light = ThemeData.from(
   colorScheme: const ColorScheme.light(
       brightness: Brightness.light,
       background: Color(0xFFfdfdfd),
-      onBackground: Color(0xFF4a4a4a),
+      onBackground: Color.fromARGB(255, 25, 24, 29),
       secondary: Color(0xFF00FFD1),
       onSecondary: Color(0xFF7e7e7e),
       primary: Color(0xFF28EECA),
@@ -18,7 +18,7 @@ ThemeData light = ThemeData.from(
 ThemeData dark = ThemeData.from(
   colorScheme: const ColorScheme.dark(
     brightness: Brightness.dark,
-    background: Color(0xFF363636),
+    background: Color.fromARGB(255, 25, 24, 29),
     onBackground: Color(0xFFFFFFFF),
     secondary: Color(0xFF00FFD1),
     onSecondary: Color(0xFF7e7e7e),
