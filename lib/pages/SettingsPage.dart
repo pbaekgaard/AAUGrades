@@ -27,19 +27,21 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _installerStore;
 
   static List<DropdownMenuItem> autoFetchOptions = [
-    DropdownMenuItem(
-        child: Text("Every fifteen minutes"), value: "Every fifteen minutes"),
-    DropdownMenuItem(child: Text("Every half hour"), value: "Every half hour"),
-    DropdownMenuItem(child: Text("Every hour"), value: "Every hour"),
-    DropdownMenuItem(
-        child: Text("Every third hour"), value: "Every third hour"),
-    DropdownMenuItem(
-        child: Text("Every sixth hour"), value: "Every sixth hour"),
-    DropdownMenuItem(
-        child: Text("Every twelfth hour"), value: "Every twelfth hour"),
-    DropdownMenuItem(child: Text("Every day"), value: "Every day"),
+    const DropdownMenuItem(
+        value: "Every fifteen minutes", child: Text("Every fifteen minutes")),
+    const DropdownMenuItem(
+        value: "Every half hour", child: Text("Every half hour")),
+    const DropdownMenuItem(value: "Every hour", child: Text("Every hour")),
+    const DropdownMenuItem(
+        value: "Every third hour", child: Text("Every third hour")),
+    const DropdownMenuItem(
+        value: "Every sixth hour", child: Text("Every sixth hour")),
+    const DropdownMenuItem(
+        value: "Every twelfth hour", child: Text("Every twelfth hour")),
+    const DropdownMenuItem(value: "Every day", child: Text("Every day")),
   ];
 
+  @override
   void initState() {
     super.initState();
     _getAppVersion();
@@ -69,27 +71,157 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.only(top: 24, bottom: 12),
-          child: Text("Settings",
-              style: GoogleFonts.inter(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                    child: Column(
+                Text("Grade Updates",
+                    style: GoogleFonts.inter(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 20)),
+                Column(
+                  children: [
+                    Container(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Fetch on startup",
+                                  style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                ),
+                                Text(
+                                  "Fetch new grades when opening the app.",
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                )
+                              ],
+                            ),
+                            Checkbox(
+                              value: fetchOnStartupEnabled,
+                              onChanged: (value) => {
+                                setState(
+                                  () {
+                                    fetchOnStartupEnabled = value!;
+                                  },
+                                )
+                              },
+                            )
+                          ]),
+                    ),
+                    Container(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Auto-fetching",
+                                  style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                ),
+                                Text(
+                                  "Automatically fetch grades in the background.",
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                )
+                              ],
+                            ),
+                            Checkbox(
+                              value: autoFetchEnabled,
+                              onChanged: (value) => {
+                                setState(
+                                  () {
+                                    autoFetchEnabled = value!;
+                                  },
+                                )
+                              },
+                            )
+                          ]),
+                    ),
+                    Container(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Fetching interval",
+                                  style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                ),
+                                Text(
+                                  "Interval to fetch grades",
+                                  style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                )
+                              ],
+                            ),
+                            DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                              padding:
+                                  const EdgeInsetsDirectional.only(end: 14),
+                              iconSize: 0,
+                              alignment: AlignmentDirectional.centerEnd,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                              items: autoFetchOptions,
+                              isExpanded: false,
+                              value: selectedFetchInterval,
+                              onChanged: (value) => {
+                                setState(
+                                  () {
+                                    selectedFetchInterval = value;
+                                  },
+                                )
+                              },
+                            ))
+                          ]),
+                    ),
+                  ],
+                )
+              ],
+            )),
+            /*
+                NOTIFICATION SECTION
+               */
+            Container(
+                padding: const EdgeInsets.only(top: 24),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Grade Updates",
+                    Text("Notifications",
                         style: GoogleFonts.inter(
                             color: Theme.of(context).colorScheme.primary,
                             fontSize: 20)),
@@ -99,386 +231,239 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Fetch on startup",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    ),
-                                    Text(
-                                      "Fetch new grades when opening the app.",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ],
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Notifications on new grades",
+                                        style: GoogleFonts.inter(
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
+                                      ),
+                                      Text(
+                                        "Get a notification when you have received a new grade on STADS!",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
+                                      )
+                                    ],
+                                  ),
                                 ),
                                 Checkbox(
-                                  value: fetchOnStartupEnabled,
+                                  value: notificationsEnabled,
                                   onChanged: (value) => {
                                     setState(
                                       () {
-                                        fetchOnStartupEnabled = value!;
+                                        notificationsEnabled = value!;
                                       },
                                     )
                                   },
                                 )
                               ]),
-                        ),
-                        Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Auto-fetching",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    ),
-                                    Text(
-                                      "Automatically fetch grades in the background.",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ],
-                                ),
-                                Checkbox(
-                                  value: autoFetchEnabled,
-                                  onChanged: (value) => {
-                                    setState(
-                                      () {
-                                        autoFetchEnabled = value!;
-                                      },
-                                    )
-                                  },
-                                )
-                              ]),
-                        ),
-                        Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Fetching interval",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    ),
-                                    Text(
-                                      "Interval to fetch grades",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ],
-                                ),
-                                DropdownButtonHideUnderline(
-                                    child: DropdownButton(
-                                  padding: EdgeInsetsDirectional.only(end: 14),
-                                  iconSize: 0,
-                                  alignment: AlignmentDirectional.centerEnd,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                  items: autoFetchOptions,
-                                  isExpanded: false,
-                                  value: selectedFetchInterval,
-                                  onChanged: (value) => {
-                                    setState(
-                                      () {
-                                        selectedFetchInterval = value;
-                                      },
-                                    )
-                                  },
-                                ))
-                              ]),
-                        ),
+                        )
                       ],
                     )
                   ],
                 )),
-                /*
-                NOTIFICATION SECTION
-               */
-                Container(
-                    padding: EdgeInsets.only(top: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Notifications",
-                            style: GoogleFonts.inter(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 20)),
-                        Column(
-                          children: [
-                            Container(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Notifications on new grades",
-                                            style: GoogleFonts.inter(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          ),
-                                          Text(
-                                            "Get a notification when you have received a new grade on STADS!",
-                                            textAlign: TextAlign.left,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 12,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Checkbox(
-                                      value: notificationsEnabled,
-                                      onChanged: (value) => {
-                                        setState(
-                                          () {
-                                            notificationsEnabled = value!;
-                                          },
-                                        )
-                                      },
-                                    )
-                                  ]),
-                            )
-                          ],
-                        )
-                      ],
-                    )),
-                /*
+            /*
               THEME SECTION
               */
-                Container(
-                    padding: EdgeInsets.only(top: 24),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Theme",
-                            style: GoogleFonts.inter(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 20),
-                          ),
-                          Consumer<ThemeService>(
-                              builder: (context, ThemeService theme, _) {
-                            return RadioListTile(
-                                title: Row(children: [
-                                  Icon(Symbols.night_sight_auto),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Text("Follow System",
-                                        style: GoogleFonts.inter(
-                                            fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onBackground)),
-                                  )
-                                ]),
-                                contentPadding: const EdgeInsets.all(0),
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                value: ThemeMode.system,
-                                groupValue: _themeGroupValue,
-                                onChanged: (val) => setState(() {
-                                      _themeGroupValue = val!;
-                                      _themeManager.themeMode = val;
-                                    }));
-                          }),
-                          Consumer<ThemeService>(
-                              builder: (context, ThemeService theme, _) {
-                            return RadioListTile(
-                                title: Row(children: [
-                                  Icon(Symbols.dark_mode),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Text("Dark Mode",
-                                        style: GoogleFonts.inter(
-                                            fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onBackground)),
-                                  ),
-                                ]),
-                                contentPadding: const EdgeInsets.all(0),
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                value: ThemeMode.dark,
-                                groupValue: _themeGroupValue,
-                                onChanged: (val) => setState(() {
-                                      _themeGroupValue = val!;
-                                      _themeManager.themeMode = val;
-                                    }));
-                          }),
-                          Consumer<ThemeService>(
-                              builder: (context, ThemeService theme, _) {
-                            return RadioListTile(
-                                title: Row(children: [
-                                  Icon(Symbols.light_mode),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Text("Light Mode",
-                                        style: GoogleFonts.inter(
-                                            fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onBackground)),
-                                  ),
-                                ]),
-                                contentPadding: const EdgeInsets.all(0),
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                value: ThemeMode.light,
-                                groupValue: _themeGroupValue,
-                                onChanged: (val) => setState(() {
-                                      _themeGroupValue = val!;
-                                      _themeManager.themeMode = val;
-                                    }));
-                          }),
-                        ])),
+            Container(
+                padding: const EdgeInsets.only(top: 24),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Theme",
+                        style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 20),
+                      ),
+                      Consumer<ThemeService>(
+                          builder: (context, ThemeService theme, _) {
+                        return RadioListTile(
+                            title: Row(children: [
+                              const Icon(Symbols.night_sight_auto),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text("Follow System",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground)),
+                              )
+                            ]),
+                            contentPadding: const EdgeInsets.all(0),
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            value: ThemeMode.system,
+                            groupValue: _themeGroupValue,
+                            onChanged: (val) => setState(() {
+                                  _themeGroupValue = val!;
+                                  _themeManager.themeMode = val;
+                                }));
+                      }),
+                      Consumer<ThemeService>(
+                          builder: (context, ThemeService theme, _) {
+                        return RadioListTile(
+                            title: Row(children: [
+                              const Icon(Symbols.dark_mode),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text("Dark Mode",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground)),
+                              ),
+                            ]),
+                            contentPadding: const EdgeInsets.all(0),
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            value: ThemeMode.dark,
+                            groupValue: _themeGroupValue,
+                            onChanged: (val) => setState(() {
+                                  _themeGroupValue = val!;
+                                  _themeManager.themeMode = val;
+                                }));
+                      }),
+                      Consumer<ThemeService>(
+                          builder: (context, ThemeService theme, _) {
+                        return RadioListTile(
+                            title: Row(children: [
+                              const Icon(Symbols.light_mode),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text("Light Mode",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground)),
+                              ),
+                            ]),
+                            contentPadding: const EdgeInsets.all(0),
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            value: ThemeMode.light,
+                            groupValue: _themeGroupValue,
+                            onChanged: (val) => setState(() {
+                                  _themeGroupValue = val!;
+                                  _themeManager.themeMode = val;
+                                }));
+                      }),
+                    ])),
 
-                /* 
+            /* 
                 ABOUT SECTION
               */
-                Container(
-                    padding: EdgeInsets.only(
-                      top: 24,
-                      bottom: 24,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            Container(
+                padding: const EdgeInsets.only(
+                  top: 24,
+                  bottom: 24,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("About",
+                        style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 20)),
+                    Column(
                       children: [
-                        Text("About",
-                            style: GoogleFonts.inter(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 20)),
-                        Column(
-                          children: [
-                            Container(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Version",
-                                            style: GoogleFonts.inter(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          ),
-                                          Text(
-                                            "Your current version of AAU Grades.",
-                                            textAlign: TextAlign.left,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 12,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          )
-                                        ],
+                        Container(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Version",
+                                        style: GoogleFonts.inter(
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
                                       ),
-                                    ),
-                                    Text(
-                                      "${_version ?? '-'}",
-                                      style: GoogleFonts.inter(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ]),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                  onPressed: () => {},
-                                  style: TextButton.styleFrom(
-                                      padding:
-                                          EdgeInsets.only(top: 12, bottom: 12),
-                                      minimumSize: Size(50, 30),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      alignment: Alignment.centerLeft),
-                                  child: Text(
-                                    "Privacy Policy",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.normal,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground),
-                                  )),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                  onPressed: () => {},
-                                  style: TextButton.styleFrom(
-                                      minimumSize: Size(50, 30),
-                                      padding:
-                                          EdgeInsets.only(top: 12, bottom: 12),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      alignment: Alignment.centerLeft),
-                                  child: Text(
-                                    "Open-Source Licenses",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.normal,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground),
-                                  )),
-                            )
-                          ],
+                                      Text(
+                                        "Your current version of AAU Grades.",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  _version ?? '-',
+                                  style: GoogleFonts.inter(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
+                                )
+                              ]),
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                              onPressed: () => {},
+                              style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.only(
+                                      top: 12, bottom: 12),
+                                  minimumSize: const Size(50, 30),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  alignment: Alignment.centerLeft),
+                              child: Text(
+                                "Privacy Policy",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              )),
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                              onPressed: () => {},
+                              style: TextButton.styleFrom(
+                                  minimumSize: const Size(50, 30),
+                                  padding: const EdgeInsets.only(
+                                      top: 12, bottom: 12),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  alignment: Alignment.centerLeft),
+                              child: Text(
+                                "Open-Source Licenses",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              )),
                         )
                       ],
-                    )),
-              ],
-            ),
-          ),
-        )
-      ],
+                    )
+                  ],
+                )),
+          ],
+        ),
+      ),
     );
   }
 }

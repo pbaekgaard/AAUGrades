@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 ThemeData light = ThemeData.from(
   colorScheme: const ColorScheme.light(
       brightness: Brightness.light,
-      background: Color(0xFFfdfdfd),
+      background: Color.fromARGB(255, 255, 255, 255),
       onBackground: Color.fromARGB(255, 25, 24, 29),
       secondary: Color(0xFF00FFD1),
       onSecondary: Color(0xFF7e7e7e),
-      primary: Color(0xFF28EECA),
+      primary: Color.fromARGB(255, 15, 231, 166),
       secondaryContainer: Color(0xFFFFFFFF),
       tertiary: Color.fromARGB(255, 50, 197, 55),
       primaryContainer: Colors.white),

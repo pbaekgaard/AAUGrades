@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:stads/providers/AuthProvider.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -18,7 +20,7 @@ class _SignInPageState extends State<SignInPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In Page'),
+        title: const Text('Sign In Page'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,7 +31,7 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Username cannot be empty';
@@ -37,11 +39,11 @@ class _SignInPageState extends State<SignInPage> {
                   return null; // Return null for no validation error
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Password cannot be empty';
@@ -49,7 +51,7 @@ class _SignInPageState extends State<SignInPage> {
                   return null; // Return null for no validation error
                 },
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () async {
                   // Validate the form
@@ -70,7 +72,7 @@ class _SignInPageState extends State<SignInPage> {
                     }
                   }
                 },
-                child: Text('Sign In'),
+                child: const Text('Sign In'),
               ),
             ],
           ),

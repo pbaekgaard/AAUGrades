@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -13,9 +12,9 @@ class User {
 }
 
 Future<bool> authenticateUser(String username, String password) async {
-  final loginUrl = 'https://sb.aau.dk/sb-ad/sb';
-  final loginForm = 'https://sb.aau.dk/sb-ad/sb/index.jsp';
-  final redirectedUrl = 'https://sb.aau.dk/sb-ad/sb/common/velkommen.jsp';
+  const loginUrl = 'https://sb.aau.dk/sb-ad/sb';
+  const loginForm = 'https://sb.aau.dk/sb-ad/sb/index.jsp';
+  const redirectedUrl = 'https://sb.aau.dk/sb-ad/sb/common/velkommen.jsp';
   const loginAuthenticationString =
       "Velkommen til STADS-Selvbetjening på Aalborg Universitet";
 
@@ -58,11 +57,11 @@ class AuthProvider extends ChangeNotifier {
   String? _notificationMessage;
   String? get notificationMessage => _notificationMessage;
 
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   // Function to check if the user is logged in
   Future<bool> isLoggedIn() async {
-    final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
     bool usernameExists = await secureStorage.containsKey(key: 'username');
     bool passwordExists = await secureStorage.containsKey(key: 'password');
     if (usernameExists && passwordExists) {

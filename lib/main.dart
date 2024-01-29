@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:stads/pages/SignInPage.dart';
 import 'package:stads/providers/Themes.dart';
@@ -72,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  bool _isLoggedIn = false;
+  final bool _isLoggedIn = false;
 
   int _selectedIndex = 1;
   void _onItemTapped(int index) {
@@ -102,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
 
     final authProvider = Provider.of<AuthProvider>(context);
-    _signOut() async {
+    signOut() async {
       await authProvider.logout();
     }
 
@@ -126,25 +125,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   centerTitle: true,
                   backgroundColor: Theme.of(context).colorScheme.background,
                   title: Text(
-                    "AAU GRADES",
+                    _selectedIndex == 2 ? "SETTINGS" : "AAU GRADES",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                   actions: [
                     Container(
-                      padding: EdgeInsets.only(right: 24),
+                      padding: const EdgeInsets.only(right: 24),
                       child: _selectedIndex != 2
                           ? IconButton(
                               onPressed: _refreshDatabase,
-                              icon: Icon(Icons.refresh))
+                              icon: const Icon(Icons.refresh))
                           : IconButton(
-                              icon: Icon(Icons.logout), onPressed: _signOut),
+                              icon: const Icon(Icons.logout),
+                              onPressed: signOut),
                     )
                   ],
                 ),
                 backgroundColor: Theme.of(context).colorScheme.background,
                 body: Container(
                     width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 24),
+                    padding:
+                        const EdgeInsetsDirectional.symmetric(horizontal: 24),
                     child: _pages[_selectedIndex]),
                 bottomNavigationBar: Container(
                   decoration: BoxDecoration(
@@ -156,17 +157,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                   .colorScheme
                                   .secondaryContainer))),
                   child: BottomNavigationBar(
+                    showUnselectedLabels: false,
                     items: const <BottomNavigationBarItem>[
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.list),
+                        icon: Icon(
+                          Icons.list,
+                          size: 26,
+                        ),
                         label: 'Grades',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.show_chart),
+                        icon: Icon(
+                          Icons.show_chart,
+                          size: 26,
+                        ),
                         label: 'Statistics',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
+                        icon: Icon(
+                          Icons.settings,
+                          size: 26,
+                        ),
                         label: "Settings",
                       )
                     ],
