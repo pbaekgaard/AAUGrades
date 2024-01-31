@@ -1,10 +1,18 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:stads/boxes/boxes.dart';
+import 'package:stads/classes/coursegrade.dart';
 
 class StadsGradesProvider extends ChangeNotifier {
   // Grade Auto fetcher
-
+  void autoFetchGrades() {}
   // Grade Fetch On Startup
+  void fetchOnStartup() {
+    final Box<CourseGrade> box = Hive.box(HiveBoxes.coursegrades);
+    box.add(CourseGrade(course: 'test', grade: '7'));
+    print("fetched on startup");
+  }
 
   // Grade Fetch interval (in minutes)
   int fetchInterval = 15;

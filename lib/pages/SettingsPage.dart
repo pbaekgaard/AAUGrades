@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:stads/boxes/boxes.dart';
+import 'package:stads/classes/coursegrade.dart';
 import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -45,6 +48,11 @@ class _SettingsPageState extends State<SettingsPage> {
     _getAppVersion();
     _themeManager = Provider.of<ThemeService>(context, listen: false);
     _themeGroupValue = _themeManager.themeMode;
+  }
+
+  void _clearDb() async {
+    Box<CourseGrade> box = Hive.box(HiveBoxes.coursegrades);
+    box.clear();
   }
 
   void _getAppVersion() async {
@@ -255,11 +263,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ]),
                         ),
-                        if (Foundation.kDebugMode) ...[
-                          TextButton(
-                              onPressed: sendTestNotification,
-                              child: Text("Send Test Notification"))
-                        ]
                       ],
                     )
                   ],
@@ -453,6 +456,34 @@ class _SettingsPageState extends State<SettingsPage> {
                     )
                   ],
                 )),
+            if (kDebugMode) ...[
+              Container(
+                  padding: const EdgeInsets.only(
+                    top: 24,
+                    bottom: 24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("DEVELOPER OPTIONS",
+                          style: GoogleFonts.inter(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 20)),
+                      Column(
+                        children: [
+                          TextButton(
+                            onPressed: sendTestNotification,
+                            child: Text("Send Test Notification"),
+                          ),
+                          TextButton(
+                            child: Text("Clear DB"),
+                            onPressed: _clearDb,
+                          )
+                        ],
+                      )
+                    ],
+                  ))
+            ]
           ],
         ),
       ),
