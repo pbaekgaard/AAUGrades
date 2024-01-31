@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:stads/boxes/boxes.dart';
+import 'package:stads/classes/coursegrade.dart';
 import 'package:stads/pages/SignInPage.dart';
+import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:stads/pages/SettingsPage.dart';
 import 'package:stads/pages/StatisticsPage.dart';
@@ -9,8 +13,12 @@ import 'package:stads/pages/AllGradesPage.dart';
 import 'package:stads/providers/AuthProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(CourseGradeAdapter());
+  await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
+  Hive.box<CourseGrade>(HiveBoxes.coursegrades);
   AwesomeNotifications().initialize(
     null,
     [
@@ -33,13 +41,36 @@ void main() {
         ChangeNotifierProvider<AuthProvider>(
             create: (context) => AuthProvider()),
       ],
-      builder: (context, _) => const MyApp(),
+      builder: (context, _) => MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // Check for opening the app again
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    state == AppLifecycleState.resumed
+        ? StadsGradesProvider().fetchOnStartup()
+        : null;
+  }
 
   // This widget is the root of your application.
   @override
@@ -79,6 +110,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void dispose() async {
+    Hive.close();
+    super.dispose();
+  }
+
   _refreshDatabase() async {
     setState(() {});
   }
@@ -104,6 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
           if (!isAllowed)
             {AwesomeNotifications().requestPermissionToSendNotifications()}
         });
+    Box<CourseGrade> box = Hive.box<CourseGrade>(HiveBoxes.coursegrades);
+    box.put('test', CourseGrade(course: "Machine Intelligence", grade: "12"));
   }
 
   @override
@@ -141,7 +180,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   backgroundColor: Theme.of(context).colorScheme.background,
                   title: Text(
                     _selectedIndex == 2 ? "SETTINGS" : "AAU GRADES",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                   actions: [
                     Container(
