@@ -22,22 +22,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: courseGradeBox.listenable(),
-        builder: (context, Box courseGrades, widget) {
-          if (courseGrades.isEmpty) {
-            return Center(
-              child: Text("You currently have no grades!"),
-            );
-          } else {
-            return ListView.builder(
-                itemCount: courseGrades.length,
-                itemBuilder: (context, index) {
-                  var currentBox = courseGrades;
-                  CourseGrade gradeData = currentBox.getAt(index);
-                  return ListTile(title: Text(gradeData.course));
-                });
-          }
-        });
+    return Container(
+      child: Text("Statistics will be here"),
+    );
   }
 }

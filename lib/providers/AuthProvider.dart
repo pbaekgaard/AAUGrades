@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 class User {
   final String username;
@@ -15,9 +18,13 @@ Future<bool> authenticateUser(String username, String password) async {
   const loginUrl = 'https://sb.aau.dk/sb-ad/sb';
   const loginForm = 'https://sb.aau.dk/sb-ad/sb/index.jsp';
   const redirectedUrl = 'http://sb.aau.dk/sb-ad/sb/common/velkommen.jsp';
-
+  final Directory appDocDir = await getApplicationDocumentsDirectory();
+  final String appDocPath = appDocDir.path;
   final dio = Dio();
-  final cookieJar = CookieJar();
+  final cookieJar = PersistCookieJar(
+    ignoreExpires: true,
+    storage: FileStorage(appDocPath + "/.cookies/"),
+  );
   dio.interceptors.add(CookieManager(cookieJar));
 
   try {
@@ -51,6 +58,16 @@ Future<bool> authenticateUser(String username, String password) async {
 }
 
 class AuthProvider extends ChangeNotifier {
+  Future<(String, String)> getUserLogin() async {
+    String username;
+    String password;
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    username = await secureStorage.read(key: 'username') as String;
+    password = await secureStorage.read(key: 'password') as String;
+
+    return (username, password);
+  }
+
   String? _notificationMessage;
   String? get notificationMessage => _notificationMessage;
 
@@ -62,7 +79,11 @@ class AuthProvider extends ChangeNotifier {
     bool usernameExists = await secureStorage.containsKey(key: 'username');
     bool passwordExists = await secureStorage.containsKey(key: 'password');
     if (usernameExists && passwordExists) {
-      return true;
+      String username = await secureStorage.read(key: 'username') as String;
+      String password = await secureStorage.read(key: 'password') as String;
+      if (await authenticateUser(username, password)) {
+        return true;
+      }
     }
     return false;
   }

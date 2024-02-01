@@ -9,7 +9,6 @@ import 'package:stads/classes/coursegrade.dart';
 import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:flutter/foundation.dart' as Foundation;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
