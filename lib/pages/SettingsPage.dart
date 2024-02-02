@@ -10,6 +10,7 @@ import 'package:stads/providers/SettingsProvider.dart';
 import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -64,6 +65,16 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _version = version;
     });
+  }
+
+  Future openUrl(String url) async {
+    // Replace 'https://example.com/privacy-policy' with the URL of your privacy policy
+    final Uri Url = Uri.parse(url);
+    if (await canLaunchUrl(Url)) {
+      await launchUrl(Url, mode: LaunchMode.inAppBrowserView);
+    } else {
+      print('could not launch');
+    }
   }
 
   void sendTestNotification() {
@@ -415,8 +426,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         alignment: Alignment.centerLeft,
                         child: TextButton(
                           child: Text("Privacy Policy"),
-                          onPressed: () {
-                            print('open privacy policy');
+                          onPressed: () async {
+                            await openUrl(
+                                'https://pbaekgaard.github.io/stads/privacy_policy');
                           },
                           style: ButtonStyle(
                               overlayColor: MaterialStateProperty.all(
@@ -435,8 +447,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         alignment: Alignment.centerLeft,
                         child: TextButton(
                           child: Text("Open-Source Licenses"),
-                          onPressed: () {
-                            print('open privacy policy');
+                          onPressed: () async {
+                            await openUrl(
+                                'https://pbaekgaard.github.io/stads/licenses');
                           },
                           style: ButtonStyle(
                               overlayColor: MaterialStateProperty.all(

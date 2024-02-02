@@ -55,6 +55,8 @@ dependencies:
   workmanager: ^0.5.2
   fl_chart: ^0.66.1
   collection: ^1.18.0
+  webview_flutter: ^4.5.0
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:
