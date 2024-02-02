@@ -52,18 +52,24 @@ Future<bool> authenticateUser(String username, String password) async {
       return false;
     }
   } catch (error) {
+    print('error in authenticateUser');
     print(error);
     return false;
   }
 }
 
 class AuthProvider extends ChangeNotifier {
-  Future<(String, String)> getUserLogin() async {
-    String username;
-    String password;
+  Future<(String?, String?)> getUserLogin() async {
+    String? username;
+    String? password;
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-    username = await secureStorage.read(key: 'username') as String;
-    password = await secureStorage.read(key: 'password') as String;
+    if (await secureStorage.containsKey(key: 'username')) {
+      username = await secureStorage.read(key: 'username') as String;
+      password = await secureStorage.read(key: 'password') as String;
+    } else {
+      username = null;
+      password = null;
+    }
 
     return (username, password);
   }

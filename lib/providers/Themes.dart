@@ -11,7 +11,7 @@ ThemeData light = ThemeData.from(
       primary: Color.fromARGB(255, 15, 231, 166),
       secondaryContainer: Color(0xFFFFFFFF),
       tertiary: Color.fromARGB(255, 50, 197, 55),
-      primaryContainer: Colors.white),
+      primaryContainer: Color(0xf3f4f6FF)),
 );
 
 ThemeData dark = ThemeData.from(
@@ -23,7 +23,7 @@ ThemeData dark = ThemeData.from(
     onSecondary: Color(0xFF7e7e7e),
     secondaryContainer: Color(0xFF444444),
     primary: Color(0xFF28EECA),
-    primaryContainer: Color(0xFF3f3f3f),
+    primaryContainer: Color.fromARGB(255, 23, 22, 27),
     tertiary: Color.fromARGB(255, 50, 197, 55),
   ),
 );

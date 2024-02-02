@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:stads/boxes/boxes.dart';
 import 'package:stads/classes/coursegrade.dart';
 import 'package:stads/pages/SignInPage.dart';
+import 'package:stads/providers/SettingsProvider.dart';
 import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:stads/pages/SettingsPage.dart';
@@ -12,13 +13,36 @@ import 'package:stads/pages/StatisticsPage.dart';
 import 'package:stads/pages/AllGradesPage.dart';
 import 'package:stads/providers/AuthProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:workmanager/workmanager.dart';
+
+// Callback dispatcher is what runs the autofetcher for the workmanager
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask(((taskName, inputData) async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(CourseGradeAdapter());
+    AwesomeNotifications().initialize(
+      null,
+      [
+        NotificationChannel(
+          channelKey: 'stads_channel',
+          channelName: 'Stads Notifications',
+          channelDescription: 'Notification channel for STADS grades',
+        )
+      ],
+      debug: true,
+    );
+    await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
+    await StadsGradesProvider().fetchGrades();
+    return Future.value(true);
+  }));
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(CourseGradeAdapter());
   await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
-  Hive.box<CourseGrade>(HiveBoxes.coursegrades);
   AwesomeNotifications().initialize(
     null,
     [
@@ -36,6 +60,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<SettingsProvider>(
+          create: (context) => SettingsProvider(),
+        ),
         ChangeNotifierProvider<ThemeService>(
             create: (context) => ThemeService()),
         ChangeNotifierProvider<AuthProvider>(
@@ -56,6 +83,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (SettingsProvider().fetchOnStartup) {
+      StadsGradesProvider().fetchGrades();
+    }
   }
 
   @override
@@ -64,12 +94,35 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // Check for opening the app again
+  // Starts the background task for autofetching
+  Future startBackgroundFetching() async {
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    await Workmanager().registerPeriodicTask('fetchTask', 'backgroundFetch',
+        frequency: Duration(minutes: SettingsProvider().fetchInterval),
+        initialDelay: Duration(minutes: SettingsProvider().fetchInterval),
+        constraints: Constraints(networkType: NetworkType.connected));
+  }
+
+  // Stops the background task for autfetching
+  Future stopBackgroundFetching() async {
+    await Workmanager().cancelAll();
+  }
+
+  // Check for the App state (opened / minimized)
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    state == AppLifecycleState.resumed
-        ? StadsGradesProvider().fetchOnStartup()
-        : null;
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      if (SettingsProvider().fetchOnStartup) {
+        StadsGradesProvider().fetchGrades();
+      }
+      if (SettingsProvider().autoFetchingEnabled) {
+        await stopBackgroundFetching();
+      }
+    } else if (state == AppLifecycleState.paused) {
+      if (SettingsProvider().autoFetchingEnabled) {
+        await startBackgroundFetching();
+      }
+    }
   }
 
   // This widget is the root of your application.
@@ -116,10 +169,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  _refreshDatabase() async {
-    setState(() {});
-  }
-
   int _selectedIndex = 1;
   void _onItemTapped(int index) {
     setState(() {
@@ -141,8 +190,6 @@ class _MyHomePageState extends State<MyHomePage> {
           if (!isAllowed)
             {AwesomeNotifications().requestPermissionToSendNotifications()}
         });
-    Box<CourseGrade> box = Hive.box<CourseGrade>(HiveBoxes.coursegrades);
-    box.put('test', CourseGrade(course: "Machine Intelligence", grade: "12"));
   }
 
   @override
@@ -177,6 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
+                  surfaceTintColor: Theme.of(context).colorScheme.primary,
                   backgroundColor: Theme.of(context).colorScheme.background,
                   title: Text(
                     _selectedIndex == 2 ? "SETTINGS" : "AAU GRADES",
@@ -188,7 +236,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.only(right: 24),
                       child: _selectedIndex != 2
                           ? IconButton(
-                              onPressed: _refreshDatabase,
+                              onPressed: () async {
+                                await StadsGradesProvider().fetchGrades();
+                              },
                               icon: const Icon(Icons.refresh))
                           : IconButton(
                               icon: const Icon(Icons.logout),
@@ -200,17 +250,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 body: Container(
                     width: MediaQuery.of(context).size.width,
                     padding:
-                        const EdgeInsetsDirectional.symmetric(horizontal: 24),
+                        const EdgeInsetsDirectional.symmetric(horizontal: 16),
                     child: _pages[_selectedIndex]),
                 bottomNavigationBar: Container(
                   decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.primaryContainer,
                       border: Border(
                           top: BorderSide(
-                              width: 2,
+                              width: 1,
                               color: Theme.of(context)
                                   .colorScheme
-                                  .secondaryContainer))),
+                                  .primaryContainer))),
                   child: BottomNavigationBar(
                     showUnselectedLabels: false,
                     items: const <BottomNavigationBarItem>[
