@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stads/boxes/boxes.dart';
 import 'package:stads/classes/coursegrade.dart';
+import 'package:stads/pages/CourseDetailsPageLetters.dart';
+import 'package:stads/pages/CourseDetailsPageNumbers.dart';
 
 class AllGradesPage extends StatefulWidget {
   const AllGradesPage({Key? key}) : super(key: key);
@@ -21,20 +22,31 @@ class _AllGradesPageState extends State<AllGradesPage> {
     courseGradeBox = Hive.box(HiveBoxes.coursegrades);
   }
 
+  DateTime getDate(String stringDate) {
+    String day = stringDate.substring(0, 2);
+    String month = stringDate.substring(3, 5);
+    String year = stringDate.substring(6, 10);
+    String date = "$year-$month-$day";
+    DateTime asDate = DateTime.parse(date);
+    return asDate;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: courseGradeBox.listenable(),
-        builder: (context, Box courseGrades, widget) {
+        builder: (context, Box<CourseGrade> courseGrades, widget) {
           if (courseGrades.isEmpty) {
-            return Center(
+            return const Center(
               child: Text("You currently have no grades!"),
             );
           } else {
             return Column(
               children: [
                 Container(
-                  padding: EdgeInsets.only(bottom: 18),
+                  margin: EdgeInsets.only(bottom: 18),
+                  color: Theme.of(context).colorScheme.background,
+                  padding: const EdgeInsets.only(bottom: 9),
                   alignment: Alignment.centerLeft,
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,14 +65,32 @@ class _AllGradesPageState extends State<AllGradesPage> {
                       ]),
                 ),
                 Expanded(
-                  child: ListView.builder(
+                  child: ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                          color: Theme.of(context).colorScheme.background,
+                          height: 5),
                       itemCount: courseGrades.length,
                       itemBuilder: (context, index) {
                         var currentBox = courseGrades;
-                        CourseGrade gradeData = currentBox.getAt(index);
+                        List<CourseGrade> grades = currentBox.values.toList();
+                        grades.sort(
+                          (a, b) => getDate(b.dateString)
+                              .compareTo(getDate(a.dateString)),
+                        );
+                        CourseGrade gradeData = grades[index];
                         return ListTile(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                  width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            tileColor:
+                                Theme.of(context).colorScheme.primaryContainer,
                             titleAlignment: ListTileTitleAlignment.center,
-                            contentPadding: EdgeInsets.zero,
+                            contentPadding:
+                                EdgeInsets.only(left: 10, right: 20),
                             title: Text(
                               gradeData.course.length >= 30
                                   ? '${gradeData.course}...'
@@ -74,8 +104,18 @@ class _AllGradesPageState extends State<AllGradesPage> {
                                     Theme.of(context).colorScheme.primary,
                                 child: Text(gradeData.grade,
                                     style: GoogleFonts.inter(fontSize: 14))),
-                            onTap: () =>
-                                {print('pressed ${gradeData.course}')});
+                            onTap: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            gradeData.isNumberGrade
+                                                ? CourseDetailsPage(
+                                                    gradeData: gradeData)
+                                                : CourseDetailsPageLetters(
+                                                    gradeData: gradeData),
+                                      ))
+                                });
                       }),
                 )
               ],

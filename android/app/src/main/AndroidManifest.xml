@@ -2,7 +2,15 @@
     <application
         android:label="stads"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
+        <receiver
+    android:name="io.flutter.plugins.workmanager.WorkmanagerPlugin$Receiver"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.android.intent.action.BOOT_COMPLETED"/>
+    </intent-filter>
+</receiver>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,5 +39,6 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 </manifest>

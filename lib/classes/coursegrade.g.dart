@@ -19,17 +19,35 @@ class CourseGradeAdapter extends TypeAdapter<CourseGrade> {
     return CourseGrade(
       course: fields[0] as String,
       grade: fields[1] as String,
+      semester: fields[2] as int,
+      dateString: fields[3] as String,
+      ECTS: fields[4] as int,
+      gradeFreqs: (fields[5] as List).cast<int>(),
+      amount: fields[6] as int,
+      isNumberGrade: fields[7] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, CourseGrade obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.course)
       ..writeByte(1)
-      ..write(obj.grade);
+      ..write(obj.grade)
+      ..writeByte(2)
+      ..write(obj.semester)
+      ..writeByte(3)
+      ..write(obj.dateString)
+      ..writeByte(4)
+      ..write(obj.ECTS)
+      ..writeByte(5)
+      ..write(obj.gradeFreqs)
+      ..writeByte(6)
+      ..write(obj.amount)
+      ..writeByte(7)
+      ..write(obj.isNumberGrade);
   }
 
   @override
