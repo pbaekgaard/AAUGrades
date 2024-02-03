@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,13 +8,6 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
-
-class User {
-  final String username;
-  final String password;
-
-  User({required this.username, required this.password});
-}
 
 Future<bool> authenticateUser(String username, String password) async {
   const loginUrl = 'https://sb.aau.dk/sb-ad/sb';
@@ -23,7 +18,7 @@ Future<bool> authenticateUser(String username, String password) async {
   final dio = Dio();
   final cookieJar = PersistCookieJar(
     ignoreExpires: true,
-    storage: FileStorage(appDocPath + "/.cookies/"),
+    storage: FileStorage("$appDocPath/.cookies/"),
   );
   dio.interceptors.add(CookieManager(cookieJar));
 

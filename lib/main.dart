@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -68,12 +70,14 @@ void main() async {
         ChangeNotifierProvider<AuthProvider>(
             create: (context) => AuthProvider()),
       ],
-      builder: (context, _) => MyApp(),
+      builder: (context, _) => const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }

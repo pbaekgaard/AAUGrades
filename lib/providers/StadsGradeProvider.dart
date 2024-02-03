@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names, avoid_print
+
 import 'dart:convert';
 import 'package:html/parser.dart' as html;
 import 'dart:io';
@@ -54,7 +56,7 @@ class StadsGradesProvider extends ChangeNotifier {
       final String appDocPath = appDocDir.path;
       final cookieJar = PersistCookieJar(
         ignoreExpires: true,
-        storage: FileStorage(appDocPath + "/.cookies/"),
+        storage: FileStorage("$appDocPath/.cookies/"),
       );
       dio.interceptors.add(CookieManager(cookieJar));
       await AuthProvider().login(login.$1!, login.$2!);
@@ -72,7 +74,7 @@ class StadsGradesProvider extends ChangeNotifier {
           final tableBody = table!.getElementsByTagName('tbody');
           final tableRows = tableBody[0].getElementsByTagName('tr');
           var sendNotification = false;
-          var notificationText;
+          String? notificationText;
           CourseGrade? latestAddedGrade;
 
           if (box.isEmpty) {
@@ -122,7 +124,7 @@ class StadsGradesProvider extends ChangeNotifier {
                     FETCHING EXTRA DETAILS ABOUT THE COURSE
                 
                  */
-                responseRaw = await dio.get(gradeDetailsUrl + 'id=${index}',
+                responseRaw = await dio.get('${gradeDetailsUrl}id=$index',
                     options: Options(
                       responseType: ResponseType.bytes,
                     ));
@@ -191,12 +193,6 @@ class StadsGradesProvider extends ChangeNotifier {
                                 .indexOf('('))));
                   }
                 }
-                if (courseName.contains('Analyse') ||
-                    courseName.contains('Problembaseret')) {
-                  gradeFrequencies.forEach((element) {
-                    print(element);
-                  });
-                }
                 final courseGrade = CourseGrade(
                   course: unescape.convert(row.children[0].innerHtml).trim(),
                   grade: grade,
@@ -215,7 +211,7 @@ class StadsGradesProvider extends ChangeNotifier {
           }
 
           if (sendNotification && SettingsProvider().notificationsEnabled) {
-            SendGradeNotification(notificationText);
+            SendGradeNotification(notificationText!);
             dio.close();
           }
         } catch (e) {
