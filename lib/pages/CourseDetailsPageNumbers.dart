@@ -1,5 +1,7 @@
 // CourseDetailsPage.dart
 
+// ignore_for_file: file_names, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +11,7 @@ import 'dart:math';
 class CourseDetailsPage extends StatefulWidget {
   final CourseGrade gradeData; // Updated parameter
 
-  CourseDetailsPage({required this.gradeData});
+  const CourseDetailsPage({super.key, required this.gradeData});
 
   @override
   _CourseDetailsPageState createState() => _CourseDetailsPageState();
@@ -24,13 +26,6 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
   @override
   Widget build(BuildContext context) {
     double barWidth = 12;
-    List<int> frequencies = widget.gradeData.gradeFreqs;
-    List<String> letters = [];
-    if (frequencies.length == 4) {
-      letters = ['B', 'I', 'U', 'EB'];
-    } else if (frequencies.length == 3) {
-      letters = ['b', 'i', 'u'];
-    }
     BarTouchData barTouchData = BarTouchData(
       enabled: false,
       touchTooltipData: BarTouchTooltipData(
@@ -55,8 +50,8 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     );
 
     Widget getTitlesNumbers(double value, TitleMeta meta) {
-      final style = TextStyle(
-        color: Colors.black,
+      TextStyle style = TextStyle(
+        color: Theme.of(context).colorScheme.onBackground,
         fontWeight: FontWeight.bold,
         fontSize: 14,
       );
@@ -144,7 +139,8 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Course Details"),
+        title: const Text("Course Details"),
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -157,7 +153,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
 
            */
           Container(
-            margin: EdgeInsets.only(bottom: 18),
+            margin: const EdgeInsets.only(bottom: 18),
             color: Theme.of(context).colorScheme.background,
             padding: const EdgeInsets.only(bottom: 10, top: 10),
             alignment: Alignment.centerLeft,
@@ -168,7 +164,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                     style: GoogleFonts.inter(
                         fontSize: 18,
                         color: Theme.of(context).colorScheme.onSecondary)),
-                Text("${widget.gradeData.course}",
+                Text(widget.gradeData.course,
                     style: GoogleFonts.inter(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -182,19 +178,10 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
             Course Details
           
           */
-          Container(
-              child:
-                  /*
-                  
-                    Details for Number Grades
-
-                    e.g. 12
-                  
-                   */
-                  Column(
+          Column(
             children: [
               Container(
-                  padding: EdgeInsets.only(bottom: 15),
+                  padding: const EdgeInsets.only(bottom: 15),
                   alignment: Alignment.centerLeft,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,15 +203,13 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                   )),
               Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 25),
+                  padding: const EdgeInsets.only(top: 25),
                   child: Column(
                     children: [
-                      Container(
-                        child: Text(
-                          "Grade Frequencies",
-                          style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
+                      Text(
+                        "Grade Frequencies",
+                        style: GoogleFonts.inter(
+                            fontWeight: FontWeight.w500, fontSize: 18),
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height / 3,
@@ -247,7 +232,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                     ],
                   )),
             ],
-          ))
+          )
         ]),
       ),
     );

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -44,7 +46,7 @@ class _AllGradesPageState extends State<AllGradesPage> {
             return Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(bottom: 18),
+                  margin: const EdgeInsets.only(bottom: 18),
                   color: Theme.of(context).colorScheme.background,
                   padding: const EdgeInsets.only(bottom: 9),
                   alignment: Alignment.centerLeft,
@@ -90,7 +92,7 @@ class _AllGradesPageState extends State<AllGradesPage> {
                                 Theme.of(context).colorScheme.primaryContainer,
                             titleAlignment: ListTileTitleAlignment.center,
                             contentPadding:
-                                EdgeInsets.only(left: 10, right: 20),
+                                const EdgeInsets.only(left: 10, right: 20),
                             title: Text(
                               gradeData.course.length >= 30
                                   ? '${gradeData.course}...'

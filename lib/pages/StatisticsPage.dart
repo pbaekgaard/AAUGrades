@@ -1,4 +1,4 @@
-import 'dart:ui';
+// ignore_for_file: file_names, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -123,15 +123,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     color: Theme.of(context).colorScheme.onBackground))
           ]),
         ),
-        (!dataPoints.isEmpty)
+        (dataPoints.isNotEmpty)
             ? Expanded(
-                child: Container(
-                    child: Padding(
+                child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: LineChart(
                   LineChartData(
-                    titlesData: FlTitlesData(show: false),
-                    gridData: FlGridData(show: false),
+                    titlesData: const FlTitlesData(show: false),
+                    gridData: const FlGridData(show: false),
                     borderData: FlBorderData(show: false),
                     minX: 0,
                     maxX: dataPoints.length.toDouble() - 1,
@@ -162,13 +161,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     ],
                   ),
                   curve: Curves.ease,
-                  duration: Duration(milliseconds: 150),
+                  duration: const Duration(milliseconds: 150),
                 ),
-              )))
-            : Center(child: Text("no data")),
+              ))
+            : const Center(child: Text("no data")),
         Container(
           height: 300,
-          padding: EdgeInsets.only(top: 24),
+          padding: const EdgeInsets.only(top: 24),
           child: Column(children: [
             /*
             
@@ -176,7 +175,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
             
              */
             Container(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 15),
                 alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +201,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
              */
             Container(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 15),
                 alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +228,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
             
             */
             Container(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 15),
                 alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

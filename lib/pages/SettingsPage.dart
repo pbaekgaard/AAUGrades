@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -69,11 +71,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future openUrl(String url) async {
     // Replace 'https://example.com/privacy-policy' with the URL of your privacy policy
-    final Uri Url = Uri.parse(url);
-    if (await canLaunchUrl(Url)) {
-      await launchUrl(Url, mode: LaunchMode.inAppBrowserView);
+    final Uri urlAsUri = Uri.parse(url);
+    if (await canLaunchUrl(urlAsUri)) {
+      await launchUrl(urlAsUri, mode: LaunchMode.inAppBrowserView);
     } else {
-      print('could not launch');
+      return;
     }
   }
 
@@ -168,54 +170,52 @@ class _SettingsPageState extends State<SettingsPage> {
                           },
                         )
                       ]),
-                  Container(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Fetching interval",
-                                style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
-                              ),
-                              Text(
-                                "Interval to fetch grades",
-                                style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
-                              )
-                            ],
-                          ),
-                          DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                            padding: const EdgeInsetsDirectional.only(end: 14),
-                            iconSize: 0,
-                            alignment: AlignmentDirectional.centerEnd,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color:
-                                    Theme.of(context).colorScheme.onBackground),
-                            items: autoFetchOptions,
-                            isExpanded: false,
-                            value: selectedFetchInterval,
-                            onChanged: (value) => {
-                              setState(
-                                () {
-                                  selectedFetchInterval = value;
-                                  _settingsProvider.fetchInterval = value;
-                                },
-                              )
-                            },
-                          ))
-                        ]),
-                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Fetching interval",
+                              style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                            ),
+                            Text(
+                              "Interval to fetch grades",
+                              style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                            )
+                          ],
+                        ),
+                        DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                          padding: const EdgeInsetsDirectional.only(end: 14),
+                          iconSize: 0,
+                          alignment: AlignmentDirectional.centerEnd,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color:
+                                  Theme.of(context).colorScheme.onBackground),
+                          items: autoFetchOptions,
+                          isExpanded: false,
+                          value: selectedFetchInterval,
+                          onChanged: (value) => {
+                            setState(
+                              () {
+                                selectedFetchInterval = value;
+                                _settingsProvider.fetchInterval = value;
+                              },
+                            )
+                          },
+                        ))
+                      ]),
                 ],
               )
             ],
@@ -234,48 +234,46 @@ class _SettingsPageState extends State<SettingsPage> {
                           fontSize: 20)),
                   Column(
                     children: [
-                      Container(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Notifications on new grades",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    ),
-                                    Text(
-                                      "Get a notification when you have received a new grade on STADS!",
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Checkbox(
-                                value: notificationsEnabled,
-                                onChanged: (value) => {
-                                  setState(
-                                    () {
-                                      notificationsEnabled = value!;
-                                      _settingsProvider.notificationsEnabled =
-                                          value;
-                                    },
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Notifications on new grades",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                  Text(
+                                    "Get a notification when you have received a new grade on STADS!",
+                                    textAlign: TextAlign.left,
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
                                   )
-                                },
+                                ],
                               ),
-                            ]),
-                      ),
+                            ),
+                            Checkbox(
+                              value: notificationsEnabled,
+                              onChanged: (value) => {
+                                setState(
+                                  () {
+                                    notificationsEnabled = value!;
+                                    _settingsProvider.notificationsEnabled =
+                                        value;
+                                  },
+                                )
+                              },
+                            ),
+                          ]),
                     ],
                   )
                 ],
@@ -386,6 +384,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Column(
                     children: [
                       Container(
+                        padding: const EdgeInsets.only(bottom: 6),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -425,7 +424,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: TextButton(
-                          child: Text("Privacy Policy"),
                           onPressed: () async {
                             await openUrl(
                                 'https://pbaekgaard.github.io/stads/privacy_policy');
@@ -441,12 +439,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                               .colorScheme
                                               .primary,
                                           width: 1.5)))),
+                          child: const Text("Privacy Policy"),
                         ),
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
                         child: TextButton(
-                          child: Text("Open-Source Licenses"),
                           onPressed: () async {
                             await openUrl(
                                 'https://pbaekgaard.github.io/stads/licenses');
@@ -462,6 +460,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               .colorScheme
                                               .primary,
                                           width: 1.5)))),
+                          child: const Text("Open-Source Licenses"),
                         ),
                       )
                     ],
@@ -486,7 +485,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                         TextButton(
                           onPressed: sendTestNotification,
-                          child: Text("Send Test Notification"),
                           style: ButtonStyle(
                               overlayColor: MaterialStateProperty.all(
                                   Theme.of(context).colorScheme.primary),
@@ -498,9 +496,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                               .colorScheme
                                               .primary,
                                           width: 1.5)))),
+                          child: const Text("Send Test Notification"),
                         ),
                         TextButton(
-                          child: Text("Clear DB"),
                           onPressed: _clearDb,
                           style: ButtonStyle(
                               overlayColor: MaterialStateProperty.all(
@@ -513,6 +511,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               .colorScheme
                                               .primary,
                                           width: 1.5)))),
+                          child: const Text("Clear DB"),
                         )
                       ],
                     )
