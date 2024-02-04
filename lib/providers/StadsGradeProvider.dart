@@ -129,74 +129,43 @@ class StadsGradesProvider extends ChangeNotifier {
                 var response = latin1.decode(responseRaw.data!);
                 var document = html.parse(response);
                 final grade = row.children[2].innerHtml;
-                final outerTable =
-                    document.getElementsByClassName('Resdetaljer')[0];
+                final outerTable = document
+                    .getElementsByClassName('Resdetaljer')[0]
+                    .children[0];
                 int antal = 0;
                 List<int> gradeFrequencies = [];
-                bool isNumberGrade = !RegExp(r'[a-zA-Z]').hasMatch(grade);
-                var antalTd = outerTable.children[0].children[7].children[2];
+                List<String> gradeLabels = [];
+                var antalTd = outerTable.children[7].children[2];
                 antal = int.parse(antalTd.innerHtml);
-                // If the grade is a number grade e.g. 7, 10 or 12..
-                if (isNumberGrade) {
-                  var frequenciesTr = outerTable
-                      .children[0]
-                      .children[10]
-                      .children[0]
-                      .children[1]
-                      .children[0]
-                      .children[0]
-                      .children[1]
-                      .children[0]
-                      .children[0]
-                      .children[0];
-                  for (int frequencyIndex = 1;
-                      frequencyIndex <= 7;
-                      frequencyIndex++) {
-                    gradeFrequencies.add(int.parse(frequenciesTr
-                        .children[frequencyIndex]
-                        .children[0]
-                        .attributes['title']!
-                        .substring(
-                            0,
-                            frequenciesTr.children[frequencyIndex].children[0]
-                                .attributes['title']!
-                                .indexOf('('))));
-                  }
+                var gradesTable = outerTable
+                    .children[outerTable.children.length - 1]
+                    .children[0]
+                    .children[1]
+                    .children[0]
+                    .children[0]
+                    .children[1]
+                    .children[0]
+                    .children[0];
+                var freqsTable = gradesTable.children[0];
+                var labelsTable =
+                    gradesTable.children[gradesTable.children.length - 1];
+                // Fetch Grade Frequencies
+                for (int i = 1; i <= freqsTable.children.length - 2; i++) {
+                  int freq = int.parse(freqsTable
+                      .children[i].children[0].attributes['title']!
+                      .substring(
+                          0,
+                          freqsTable
+                              .children[i].children[0].attributes['title']!
+                              .indexOf('(')));
+                  gradeFrequencies.add(freq);
                 }
-                // If the grade is a letter e.g. B, I or U..
-                else {
-                  var frequenciesTr = outerTable
-                      .children[0]
-                      .children[9]
-                      .children[0]
-                      .children[1]
-                      .children[0]
-                      .children[0]
-                      .children[1]
-                      .children[0]
-                      .children[0]
-                      .children[0];
-                  for (int frequencyIndex = 1;
-                      frequencyIndex <=
-                          (frequenciesTr.children.length == 6 ? 4 : 3);
-                      frequencyIndex++) {
-                    gradeFrequencies.add(int.parse(frequenciesTr
-                        .children[frequencyIndex]
-                        .children[0]
-                        .attributes['title']!
-                        .substring(
-                            0,
-                            frequenciesTr.children[frequencyIndex].children[0]
-                                .attributes['title']!
-                                .indexOf('('))));
-                  }
+
+                // Fetch Grade Labels
+                for (int i = 1; i <= labelsTable.children.length - 2; i++) {
+                  gradeLabels.add(labelsTable.children[i].innerHtml);
                 }
-                if (courseName.contains('Analyse') ||
-                    courseName.contains('Problembaseret')) {
-                  gradeFrequencies.forEach((element) {
-                    print(element);
-                  });
-                }
+
                 final courseGrade = CourseGrade(
                   course: unescape.convert(row.children[0].innerHtml).trim(),
                   grade: grade,
@@ -205,7 +174,7 @@ class StadsGradesProvider extends ChangeNotifier {
                   ECTS: double.parse(ectsString).toInt(),
                   gradeFreqs: gradeFrequencies,
                   amount: antal,
-                  isNumberGrade: isNumberGrade,
+                  gradeLabels: gradeLabels,
                 );
                 courses[row.children[0].innerHtml] = courseGrade;
                 box.put(courseName, courseGrade);

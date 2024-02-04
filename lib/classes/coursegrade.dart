@@ -12,7 +12,7 @@ class CourseGrade {
     required this.ECTS,
     required this.gradeFreqs,
     required this.amount,
-    required this.isNumberGrade,
+    required this.gradeLabels,
   });
   @HiveField(0)
   String course;
@@ -36,5 +36,5 @@ class CourseGrade {
   int amount;
 
   @HiveField(7)
-  bool isNumberGrade;
+  List<String> gradeLabels;
 }

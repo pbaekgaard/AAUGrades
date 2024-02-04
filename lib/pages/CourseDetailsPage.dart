@@ -61,32 +61,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
         fontSize: 14,
       );
       String text;
-      switch (value.toInt()) {
-        case 0:
-          text = '-3';
-          break;
-        case 1:
-          text = '00';
-          break;
-        case 2:
-          text = '02';
-          break;
-        case 3:
-          text = '4';
-          break;
-        case 4:
-          text = '7';
-          break;
-        case 5:
-          text = '10';
-          break;
-        case 6:
-          text = '12';
-          break;
-        default:
-          text = '';
-          break;
-      }
+      text = widget.gradeData.gradeLabels[value.toInt()];
       return SideTitleWidget(
         axisSide: meta.axisSide,
         space: 4,

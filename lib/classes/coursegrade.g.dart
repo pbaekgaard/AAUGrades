@@ -24,7 +24,7 @@ class CourseGradeAdapter extends TypeAdapter<CourseGrade> {
       ECTS: fields[4] as int,
       gradeFreqs: (fields[5] as List).cast<int>(),
       amount: fields[6] as int,
-      isNumberGrade: fields[7] as bool,
+      gradeLabels: (fields[7] as List).cast<String>(),
     );
   }
 
@@ -47,7 +47,7 @@ class CourseGradeAdapter extends TypeAdapter<CourseGrade> {
       ..writeByte(6)
       ..write(obj.amount)
       ..writeByte(7)
-      ..write(obj.isNumberGrade);
+      ..write(obj.gradeLabels);
   }
 
   @override

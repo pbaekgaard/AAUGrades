@@ -3,8 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stads/boxes/boxes.dart';
 import 'package:stads/classes/coursegrade.dart';
-import 'package:stads/pages/CourseDetailsPageLetters.dart';
-import 'package:stads/pages/CourseDetailsPageNumbers.dart';
+import 'package:stads/pages/CourseDetailsPage.dart';
 
 class AllGradesPage extends StatefulWidget {
   const AllGradesPage({Key? key}) : super(key: key);
@@ -108,12 +107,8 @@ class _AllGradesPageState extends State<AllGradesPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            gradeData.isNumberGrade
-                                                ? CourseDetailsPage(
-                                                    gradeData: gradeData)
-                                                : CourseDetailsPageLetters(
-                                                    gradeData: gradeData),
+                                        builder: (context) => CourseDetailsPage(
+                                            gradeData: gradeData),
                                       ))
                                 });
                       }),
