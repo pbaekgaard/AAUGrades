@@ -6,11 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:stads/boxes/boxes.dart';
-import 'package:stads/classes/coursegrade.dart';
-import 'package:stads/providers/SettingsProvider.dart';
-import 'package:stads/providers/StadsGradeProvider.dart';
-import 'package:stads/providers/Themes.dart';
+import 'package:AAUGrades/boxes/boxes.dart';
+import 'package:AAUGrades/classes/coursegrade.dart';
+import 'package:AAUGrades/providers/SettingsProvider.dart';
+import 'package:AAUGrades/providers/StadsGradeProvider.dart';
+import 'package:AAUGrades/providers/Themes.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 

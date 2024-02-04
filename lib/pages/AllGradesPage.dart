@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:stads/boxes/boxes.dart';
-import 'package:stads/classes/coursegrade.dart';
-import 'package:stads/pages/CourseDetailsPageLetters.dart';
-import 'package:stads/pages/CourseDetailsPageNumbers.dart';
+import 'package:AAUGrades/boxes/boxes.dart';
+import 'package:AAUGrades/classes/coursegrade.dart';
+import 'package:AAUGrades/pages/CourseDetailsPageLetters.dart';
+import 'package:AAUGrades/pages/CourseDetailsPageNumbers.dart';
 
 class AllGradesPage extends StatefulWidget {
   const AllGradesPage({Key? key}) : super(key: key);

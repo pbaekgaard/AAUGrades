@@ -5,7 +5,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:stads/classes/coursegrade.dart';
+import 'package:AAUGrades/classes/coursegrade.dart';
 import 'dart:math';
 
 class CourseDetailsPage extends StatefulWidget {

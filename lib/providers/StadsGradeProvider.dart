@@ -9,12 +9,12 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:stads/boxes/boxes.dart';
-import 'package:stads/classes/coursegrade.dart';
-import 'package:stads/providers/AuthProvider.dart';
+import 'package:AAUGrades/boxes/boxes.dart';
+import 'package:AAUGrades/classes/coursegrade.dart';
+import 'package:AAUGrades/providers/AuthProvider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:stads/providers/SettingsProvider.dart';
+import 'package:AAUGrades/providers/SettingsProvider.dart';
 
 class StadsGradesProvider extends ChangeNotifier {
   // Notification Sender
@@ -214,6 +214,7 @@ class StadsGradesProvider extends ChangeNotifier {
             SendGradeNotification(notificationText!);
             dio.close();
           }
+          StadsGradesProvider().notifyListeners();
         } catch (e) {
           print('error in fetchGrades');
           print(e);
