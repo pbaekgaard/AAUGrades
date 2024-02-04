@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names, avoid_print
+
 import 'dart:convert';
 import 'package:html/parser.dart' as html;
 import 'dart:io';
@@ -7,12 +9,12 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:stads/boxes/boxes.dart';
-import 'package:stads/classes/coursegrade.dart';
-import 'package:stads/providers/AuthProvider.dart';
+import 'package:AAUGrades/boxes/boxes.dart';
+import 'package:AAUGrades/classes/coursegrade.dart';
+import 'package:AAUGrades/providers/AuthProvider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:stads/providers/SettingsProvider.dart';
+import 'package:AAUGrades/providers/SettingsProvider.dart';
 
 class StadsGradesProvider extends ChangeNotifier {
   // Notification Sender
@@ -54,7 +56,7 @@ class StadsGradesProvider extends ChangeNotifier {
       final String appDocPath = appDocDir.path;
       final cookieJar = PersistCookieJar(
         ignoreExpires: true,
-        storage: FileStorage(appDocPath + "/.cookies/"),
+        storage: FileStorage("$appDocPath/.cookies/"),
       );
       dio.interceptors.add(CookieManager(cookieJar));
       await AuthProvider().login(login.$1!, login.$2!);
@@ -72,7 +74,7 @@ class StadsGradesProvider extends ChangeNotifier {
           final tableBody = table!.getElementsByTagName('tbody');
           final tableRows = tableBody[0].getElementsByTagName('tr');
           var sendNotification = false;
-          var notificationText;
+          String? notificationText;
           CourseGrade? latestAddedGrade;
 
           if (box.isEmpty) {
@@ -122,7 +124,7 @@ class StadsGradesProvider extends ChangeNotifier {
                     FETCHING EXTRA DETAILS ABOUT THE COURSE
                 
                  */
-                responseRaw = await dio.get(gradeDetailsUrl + 'id=${index}',
+                responseRaw = await dio.get('${gradeDetailsUrl}id=$index',
                     options: Options(
                       responseType: ResponseType.bytes,
                     ));
@@ -184,9 +186,10 @@ class StadsGradesProvider extends ChangeNotifier {
           }
 
           if (sendNotification && SettingsProvider().notificationsEnabled) {
-            SendGradeNotification(notificationText);
+            SendGradeNotification(notificationText!);
             dio.close();
           }
+          StadsGradesProvider().notifyListeners();
         } catch (e) {
           print('error in fetchGrades');
           print(e);

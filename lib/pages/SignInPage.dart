@@ -1,6 +1,9 @@
+// ignore_for_file: file_names, library_private_types_in_public_api, use_build_context_synchronously
+
+import 'package:AAUGrades/providers/StadsGradeProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stads/providers/AuthProvider.dart';
+import 'package:AAUGrades/providers/AuthProvider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -69,6 +72,8 @@ class _SignInPageState extends State<SignInPage> {
                           content: Text(authProvider.notificationMessage!),
                         ),
                       );
+                    } else {
+                      StadsGradesProvider().fetchGrades();
                     }
                   }
                 },

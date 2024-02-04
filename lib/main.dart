@@ -1,17 +1,19 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:stads/boxes/boxes.dart';
-import 'package:stads/classes/coursegrade.dart';
-import 'package:stads/pages/SignInPage.dart';
-import 'package:stads/providers/SettingsProvider.dart';
-import 'package:stads/providers/StadsGradeProvider.dart';
-import 'package:stads/providers/Themes.dart';
-import 'package:stads/pages/SettingsPage.dart';
-import 'package:stads/pages/StatisticsPage.dart';
-import 'package:stads/pages/AllGradesPage.dart';
-import 'package:stads/providers/AuthProvider.dart';
+import 'package:AAUGrades/boxes/boxes.dart';
+import 'package:AAUGrades/classes/coursegrade.dart';
+import 'package:AAUGrades/pages/SignInPage.dart';
+import 'package:AAUGrades/providers/SettingsProvider.dart';
+import 'package:AAUGrades/providers/StadsGradeProvider.dart';
+import 'package:AAUGrades/providers/Themes.dart';
+import 'package:AAUGrades/pages/SettingsPage.dart';
+import 'package:AAUGrades/pages/StatisticsPage.dart';
+import 'package:AAUGrades/pages/AllGradesPage.dart';
+import 'package:AAUGrades/providers/AuthProvider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -30,7 +32,7 @@ void callbackDispatcher() {
           channelDescription: 'Notification channel for STADS grades',
         )
       ],
-      debug: true,
+      debug: false,
     );
     await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
     await StadsGradesProvider().fetchGrades();
@@ -52,7 +54,7 @@ void main() async {
         channelDescription: 'Notification channel for STADS grades',
       )
     ],
-    debug: true,
+    debug: false,
   );
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
@@ -68,12 +70,14 @@ void main() async {
         ChangeNotifierProvider<AuthProvider>(
             create: (context) => AuthProvider()),
       ],
-      builder: (context, _) => MyApp(),
+      builder: (context, _) => const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -96,7 +100,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   // Starts the background task for autofetching
   Future startBackgroundFetching() async {
-    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     await Workmanager().registerPeriodicTask('fetchTask', 'backgroundFetch',
         frequency: Duration(minutes: SettingsProvider().fetchInterval),
         initialDelay: Duration(minutes: SettingsProvider().fetchInterval),
