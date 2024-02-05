@@ -13,6 +13,7 @@ class CourseGrade {
     required this.gradeFreqs,
     required this.amount,
     required this.gradeLabels,
+    required this.include,
   });
   @HiveField(0)
   String course;
@@ -37,4 +38,7 @@ class CourseGrade {
 
   @HiveField(7)
   List<String> gradeLabels;
+
+  @HiveField(8)
+  bool include;
 }

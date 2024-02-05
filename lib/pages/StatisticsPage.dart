@@ -47,7 +47,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   void calculateECTS() {
     for (CourseGrade grade in courseGradesList) {
-      passedECTS += grade.ECTS;
+      if (grade.include) {
+        passedECTS += grade.ECTS;
+      }
     }
   }
 
@@ -55,10 +57,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
     double weightedTotal = 0;
     double totalECTS = 0;
     for (CourseGrade grade in courseGradesList) {
-      double score = double.tryParse(grade.grade) ?? 0;
-      if (score != 0) {
-        totalECTS += grade.ECTS;
-        weightedTotal += score * grade.ECTS;
+      if (grade.include) {
+        double score = double.tryParse(grade.grade) ?? 0;
+        if (score != 0) {
+          totalECTS += grade.ECTS;
+          weightedTotal += score * grade.ECTS;
+        }
       }
     }
 
@@ -76,12 +80,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
         int gradeCount = 0;
 
         for (CourseGrade grade in courseGradesList) {
-          if (grade.semester <= i) {
-            double gradeValue = double.tryParse(grade.grade) ?? 0;
-            if (gradeValue != 0) {
-              gradeCount++;
+          if(grade.include) {
+            if (grade.semester <= i) {
+              double gradeValue = double.tryParse(grade.grade) ?? 0;
+              if (gradeValue != 0) {
+                gradeCount++;
+              }
+              totalSum += gradeValue;
             }
-            totalSum += gradeValue;
           }
         }
 

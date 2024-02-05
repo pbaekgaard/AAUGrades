@@ -25,13 +25,14 @@ class CourseGradeAdapter extends TypeAdapter<CourseGrade> {
       gradeFreqs: (fields[5] as List).cast<int>(),
       amount: fields[6] as int,
       gradeLabels: (fields[7] as List).cast<String>(),
+      include: fields[8] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, CourseGrade obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.course)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class CourseGradeAdapter extends TypeAdapter<CourseGrade> {
       ..writeByte(6)
       ..write(obj.amount)
       ..writeByte(7)
-      ..write(obj.gradeLabels);
+      ..write(obj.gradeLabels)
+      ..writeByte(8)
+      ..write(obj.include);
   }
 
   @override

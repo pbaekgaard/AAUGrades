@@ -11,6 +11,7 @@ import 'package:stads/providers/StadsGradeProvider.dart';
 import 'package:stads/providers/Themes.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:workmanager/workmanager.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -162,6 +163,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             setState(
                               () {
                                 autoFetchEnabled = value!;
+                                if (value == false) {
+                                  Workmanager().cancelAll();
+                                }
                                 _settingsProvider.autoFetchingEnabled = value;
                               },
                             )

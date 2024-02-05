@@ -7,7 +7,7 @@ import 'package:stads/classes/coursegrade.dart';
 import 'dart:math';
 
 class CourseDetailsPage extends StatefulWidget {
-  final CourseGrade gradeData; // Updated parameter
+  CourseGrade gradeData; // Updated parameter
 
   CourseDetailsPage({required this.gradeData});
 
@@ -25,12 +25,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
   Widget build(BuildContext context) {
     double barWidth = 12;
     List<int> frequencies = widget.gradeData.gradeFreqs;
-    List<String> letters = [];
-    if (frequencies.length == 4) {
-      letters = ['B', 'I', 'U', 'EB'];
-    } else if (frequencies.length == 3) {
-      letters = ['b', 'i', 'u'];
-    }
+
     BarTouchData barTouchData = BarTouchData(
       enabled: false,
       touchTooltipData: BarTouchTooltipData(
@@ -120,6 +115,28 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Course Details"),
+        actions: [
+          GestureDetector(
+              onLongPress: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(widget.gradeData.include
+                        ? "Exclude from statistics calculations"
+                        : "Include in statistics calculations"),
+                  ),
+                );
+              },
+              child: IconButton(
+                icon: widget.gradeData.include
+                    ? Icon(Icons.check)
+                    : Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    widget.gradeData.include = !widget.gradeData.include;
+                  });
+                },
+              ))
+        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

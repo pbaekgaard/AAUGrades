@@ -175,6 +175,7 @@ class StadsGradesProvider extends ChangeNotifier {
                   gradeFreqs: gradeFrequencies,
                   amount: antal,
                   gradeLabels: gradeLabels,
+                  include: true,
                 );
                 courses[row.children[0].innerHtml] = courseGrade;
                 box.put(courseName, courseGrade);

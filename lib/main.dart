@@ -30,7 +30,7 @@ void callbackDispatcher() {
           channelDescription: 'Notification channel for STADS grades',
         )
       ],
-      debug: true,
+      debug: false,
     );
     await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
     await StadsGradesProvider().fetchGrades();
@@ -52,7 +52,7 @@ void main() async {
         channelDescription: 'Notification channel for STADS grades',
       )
     ],
-    debug: true,
+    debug: false,
   );
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemStatusBarContrastEnforced: false,
@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   // Starts the background task for autofetching
   Future startBackgroundFetching() async {
-    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     await Workmanager().registerPeriodicTask('fetchTask', 'backgroundFetch',
         frequency: Duration(minutes: SettingsProvider().fetchInterval),
         initialDelay: Duration(minutes: SettingsProvider().fetchInterval),
