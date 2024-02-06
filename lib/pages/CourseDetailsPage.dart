@@ -3,8 +3,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:stads/classes/coursegrade.dart';
 import 'dart:math';
+import 'package:stads/boxes/boxes.dart';
 
 class CourseDetailsPage extends StatefulWidget {
   CourseGrade gradeData; // Updated parameter
@@ -16,9 +18,11 @@ class CourseDetailsPage extends StatefulWidget {
 }
 
 class _CourseDetailsPageState extends State<CourseDetailsPage> {
+  late Box<CourseGrade> courseGradeBox;
   @override
   void initState() {
     super.initState();
+    courseGradeBox = Hive.box(HiveBoxes.coursegrades);
   }
 
   @override
@@ -128,11 +132,12 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
               },
               child: IconButton(
                 icon: widget.gradeData.include
-                    ? Icon(Icons.check)
-                    : Icon(Icons.close),
+                    ? const Icon(Icons.check)
+                    : const Icon(Icons.close),
                 onPressed: () {
                   setState(() {
                     widget.gradeData.include = !widget.gradeData.include;
+                    widget.gradeData.save();
                   });
                 },
               ))

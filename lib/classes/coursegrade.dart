@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 part 'coursegrade.g.dart';
 
 @HiveType(typeId: 1)
-class CourseGrade {
+class CourseGrade extends HiveObject {
   CourseGrade({
     required this.course,
     required this.grade,
