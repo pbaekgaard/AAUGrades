@@ -55,7 +55,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
 
     Widget getTitlesNumbers(double value, TitleMeta meta) {
       final style = TextStyle(
-        color: Colors.black,
+        color: Theme.of(context).colorScheme.onBackground,
         fontWeight: FontWeight.bold,
         fontSize: 14,
       );
@@ -119,6 +119,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Course Details"),
+        surfaceTintColor: Colors.transparent,
         actions: [
           GestureDetector(
               onLongPress: () {
@@ -204,6 +205,27 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                       ),
                       Text(
                         widget.gradeData.amount.toString(),
+                        style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      )
+                    ],
+                  )),
+              Container(
+                  padding: EdgeInsets.only(bottom: 15),
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Your grade",
+                        style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontSize: 18),
+                      ),
+                      Text(
+                        widget.gradeData.grade.toString(),
                         style: GoogleFonts.inter(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,

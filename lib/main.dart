@@ -231,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  surfaceTintColor: Theme.of(context).colorScheme.primary,
+                  surfaceTintColor: Colors.transparent,
                   backgroundColor: Theme.of(context).colorScheme.background,
                   title: Text(
                     _selectedIndex == 2 ? "SETTINGS" : "AAU GRADES",

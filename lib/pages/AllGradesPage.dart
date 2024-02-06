@@ -102,7 +102,9 @@ class _AllGradesPageState extends State<AllGradesPage> {
                                 backgroundColor:
                                     Theme.of(context).colorScheme.primary,
                                 child: Text(gradeData.grade,
-                                    style: GoogleFonts.inter(fontSize: 14))),
+                                    style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
                             onTap: () => {
                                   Navigator.push(
                                       context,
