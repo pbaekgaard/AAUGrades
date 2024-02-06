@@ -3,8 +3,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:stads/classes/coursegrade.dart';
 import 'dart:math';
+import 'package:stads/boxes/boxes.dart';
 
 class CourseDetailsPage extends StatefulWidget {
   CourseGrade gradeData; // Updated parameter
@@ -16,9 +18,11 @@ class CourseDetailsPage extends StatefulWidget {
 }
 
 class _CourseDetailsPageState extends State<CourseDetailsPage> {
+  late Box<CourseGrade> courseGradeBox;
   @override
   void initState() {
     super.initState();
+    courseGradeBox = Hive.box(HiveBoxes.coursegrades);
   }
 
   @override
@@ -51,7 +55,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
 
     Widget getTitlesNumbers(double value, TitleMeta meta) {
       final style = TextStyle(
-        color: Colors.black,
+        color: Theme.of(context).colorScheme.onBackground,
         fontWeight: FontWeight.bold,
         fontSize: 14,
       );
@@ -115,6 +119,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Course Details"),
+        surfaceTintColor: Colors.transparent,
         actions: [
           GestureDetector(
               onLongPress: () {
@@ -128,11 +133,12 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
               },
               child: IconButton(
                 icon: widget.gradeData.include
-                    ? Icon(Icons.check)
-                    : Icon(Icons.close),
+                    ? const Icon(Icons.check)
+                    : const Icon(Icons.close),
                 onPressed: () {
                   setState(() {
                     widget.gradeData.include = !widget.gradeData.include;
+                    widget.gradeData.save();
                   });
                 },
               ))
@@ -199,6 +205,27 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                       ),
                       Text(
                         widget.gradeData.amount.toString(),
+                        style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      )
+                    ],
+                  )),
+              Container(
+                  padding: EdgeInsets.only(bottom: 15),
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Your grade",
+                        style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontSize: 18),
+                      ),
+                      Text(
+                        widget.gradeData.grade.toString(),
                         style: GoogleFonts.inter(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,

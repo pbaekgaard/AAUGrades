@@ -83,9 +83,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (SettingsProvider().fetchOnStartup) {
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (Provider.of<SettingsProvider>(context).fetchOnStartup) {
       StadsGradesProvider().fetchGrades();
     }
+    super.didChangeDependencies();
   }
 
   @override
@@ -98,8 +103,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Future startBackgroundFetching() async {
     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     await Workmanager().registerPeriodicTask('fetchTask', 'backgroundFetch',
-        frequency: Duration(minutes: SettingsProvider().fetchInterval),
-        initialDelay: Duration(minutes: SettingsProvider().fetchInterval),
+        frequency: Duration(
+            minutes: Provider.of<SettingsProvider>(context).fetchInterval),
+        initialDelay: Duration(
+            minutes: Provider.of<SettingsProvider>(context).fetchInterval),
         constraints: Constraints(networkType: NetworkType.connected));
   }
 
@@ -112,14 +119,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      if (SettingsProvider().fetchOnStartup) {
+      if (Provider.of<SettingsProvider>(context).fetchOnStartup) {
         StadsGradesProvider().fetchGrades();
       }
-      if (SettingsProvider().autoFetchingEnabled) {
+      if (Provider.of<SettingsProvider>(context).autoFetchingEnabled) {
         await stopBackgroundFetching();
       }
     } else if (state == AppLifecycleState.paused) {
-      if (SettingsProvider().autoFetchingEnabled) {
+      if (Provider.of<SettingsProvider>(context).autoFetchingEnabled) {
         await startBackgroundFetching();
       }
     }
@@ -224,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Scaffold(
                 appBar: AppBar(
                   centerTitle: true,
-                  surfaceTintColor: Theme.of(context).colorScheme.primary,
+                  surfaceTintColor: Colors.transparent,
                   backgroundColor: Theme.of(context).colorScheme.background,
                   title: Text(
                     _selectedIndex == 2 ? "SETTINGS" : "AAU GRADES",

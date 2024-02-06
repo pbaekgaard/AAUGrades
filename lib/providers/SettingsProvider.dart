@@ -1,65 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsProvider extends ChangeNotifier {
+class SettingsProvider with ChangeNotifier {
   static const String autoFetchingKey = 'autoFetching';
   static const String fetchIntervalKey = 'fetchInterval';
   static const String notificationsEnabledKey = 'notificationsEnabled';
   static const String fetchOnStartupKey = 'fetchOnStartup';
 
-  late SharedPreferences _prefs;
+  bool? _autoFetchingEnabled;
+  int? _fetchInterval;
+  bool? _notificationsEnabled;
+  bool? _fetchOnStartup;
 
-  bool _autoFetchingEnabled = true;
-  int _fetchInterval = 15;
-  bool _notificationsEnabled = true;
-  bool _fetchOnStartup = true;
+  Future init() async {
+    await _loadSettings();
+  }
 
   SettingsProvider() {
     _loadSettings();
   }
-  bool get fetchOnStartup => _fetchOnStartup;
+
+  bool get fetchOnStartup {
+    return _fetchOnStartup ?? true;
+  }
+
   set fetchOnStartup(bool value) {
     _fetchOnStartup = value;
-    _saveSettings();
+    _savesetting(fetchOnStartupKey, value);
     notifyListeners();
   }
 
-  bool get autoFetchingEnabled => _autoFetchingEnabled;
+  bool get autoFetchingEnabled {
+    return _autoFetchingEnabled ?? true;
+  }
+
   set autoFetchingEnabled(bool value) {
     _autoFetchingEnabled = value;
-    _saveSettings();
+    _savesetting(autoFetchingKey, value);
     notifyListeners();
   }
 
-  int get fetchInterval => _fetchInterval;
+  int get fetchInterval {
+    return _fetchInterval ?? 15;
+  }
 
   set fetchInterval(int value) {
     _fetchInterval = value;
-    _saveSettings();
+    _savesetting(fetchIntervalKey, value);
     notifyListeners();
   }
 
-  bool get notificationsEnabled => _notificationsEnabled;
+  bool get notificationsEnabled {
+    return _notificationsEnabled ?? true;
+  }
 
   set notificationsEnabled(bool value) {
     _notificationsEnabled = value;
-    _saveSettings();
+    _savesetting(notificationsEnabledKey, value);
     notifyListeners();
   }
 
-  Future<void> _loadSettings() async {
-    _prefs = await SharedPreferences.getInstance();
-    _autoFetchingEnabled = _prefs.getBool(autoFetchingKey) ?? false;
-    _fetchInterval = _prefs.getInt(fetchIntervalKey) ?? 15;
-    _notificationsEnabled = _prefs.getBool(notificationsEnabledKey) ?? true;
-    _fetchOnStartup = _prefs.getBool(fetchOnStartupKey) ?? true;
+  Future _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? fetchInterval = prefs.getInt(fetchIntervalKey);
+    bool? autofetching = prefs.getBool(autoFetchingKey);
+    bool? notifications = prefs.getBool(notificationsEnabledKey);
+    bool? fetchonstartup = prefs.getBool(fetchOnStartupKey);
+    _fetchInterval = fetchInterval;
+    _autoFetchingEnabled = autofetching;
+    _notificationsEnabled = notifications;
+    _fetchOnStartup = fetchonstartup;
     notifyListeners();
   }
 
-  Future<void> _saveSettings() async {
-    await _prefs.setBool(autoFetchingKey, _autoFetchingEnabled);
-    await _prefs.setInt(fetchIntervalKey, _fetchInterval);
-    await _prefs.setBool(notificationsEnabledKey, _notificationsEnabled);
-    await _prefs.setBool(fetchOnStartupKey, _fetchOnStartup);
+  _savesetting(String key, var setting) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (setting is bool) {
+      prefs.setBool(key, setting);
+    } else {
+      prefs.setInt(key, setting);
+    }
   }
 }
