@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:stads/boxes/boxes.dart';
 import 'package:stads/classes/coursegrade.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:stads/providers/StadsGradeProvider.dart';
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
@@ -23,17 +25,32 @@ class _StatisticsPageState extends State<StatisticsPage> {
   int passedECTS = 0;
   double currentAverage = 0;
   double weightedAverage = 0;
+  bool isUpdatingStats = false;
+
   @override
   void initState() {
     super.initState();
     courseGradeBox = Hive.box(HiveBoxes.coursegrades);
-    courseGradesList = courseGradeBox.values.toList();
-    courseGradesList.sort(
-      (a, b) => getDate(b.dateString).compareTo(getDate(a.dateString)),
-    );
-    calculateECTS();
-    calculateWeightedAverage();
-    calculateAveragePoints();
+    updateStats();
+  }
+
+  Future<void> updateStats() async {
+    if (!isUpdatingStats) {
+      isUpdatingStats = true;
+      dataPoints = [];
+      maxAverage = 0;
+      passedECTS = 0;
+      currentAverage = 0;
+      weightedAverage = 0;
+      courseGradesList = courseGradeBox.values.toList();
+      courseGradesList.sort(
+        (a, b) => getDate(b.dateString).compareTo(getDate(a.dateString)),
+      );
+      calculateECTS();
+      calculateWeightedAverage();
+      calculateAveragePoints();
+      isUpdatingStats = false;
+    }
   }
 
   DateTime getDate(String stringDate) {
@@ -80,7 +97,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         int gradeCount = 0;
 
         for (CourseGrade grade in courseGradesList) {
-          if(grade.include) {
+          if (grade.include) {
             if (grade.semester <= i) {
               double gradeValue = double.tryParse(grade.grade) ?? 0;
               if (gradeValue != 0) {
@@ -104,6 +121,13 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   @override
   Widget build(BuildContext context) {
+    StadsGradesProvider gradeProvider =
+        Provider.of<StadsGradesProvider>(context);
+
+    gradeProvider.addListener(() async {
+      await updateStats();
+    });
+
     List<Color> gradientColors = [
       Theme.of(context).colorScheme.primary,
       Color.lerp(Theme.of(context).colorScheme.secondary,
@@ -129,7 +153,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     color: Theme.of(context).colorScheme.onBackground))
           ]),
         ),
-        (!dataPoints.isEmpty)
+        (dataPoints.isNotEmpty)
             ? Expanded(
                 child: Container(
                     child: Padding(

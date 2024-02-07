@@ -188,6 +188,7 @@ class StadsGradesProvider extends ChangeNotifier {
             SendGradeNotification(notificationText);
             dio.close();
           }
+          notifyListeners();
         } catch (e) {
           print('error in fetchGrades');
           print(e);

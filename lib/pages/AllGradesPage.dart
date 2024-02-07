@@ -64,57 +64,75 @@ class _AllGradesPageState extends State<AllGradesPage> {
                       ]),
                 ),
                 Expanded(
-                  child: ListView.separated(
-                      separatorBuilder: (context, index) => Divider(
-                          color: Theme.of(context).colorScheme.background,
-                          height: 5),
-                      itemCount: courseGrades.length,
-                      itemBuilder: (context, index) {
-                        var currentBox = courseGrades;
-                        List<CourseGrade> grades = currentBox.values.toList();
-                        grades.sort(
-                          (a, b) => getDate(b.dateString)
-                              .compareTo(getDate(a.dateString)),
-                        );
-                        CourseGrade gradeData = grades[index];
-                        return ListTile(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            tileColor:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            titleAlignment: ListTileTitleAlignment.center,
-                            contentPadding:
-                                EdgeInsets.only(left: 10, right: 20),
-                            title: Text(
-                              gradeData.course.length >= 30
-                                  ? '${gradeData.course}...'
-                                  : gradeData.course,
-                              style: GoogleFonts.inter(fontSize: 16),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            splashColor: Theme.of(context).colorScheme.primary,
-                            trailing: CircleAvatar(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                child: Text(gradeData.grade,
-                                    style: GoogleFonts.inter(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold))),
-                            onTap: () => {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CourseDetailsPage(
-                                            gradeData: gradeData),
-                                      ))
-                                });
-                      }),
-                )
+                    child: ListView.separated(
+                        separatorBuilder: (context, index) => Divider(
+                            color: Theme.of(context).colorScheme.background,
+                            height: 5),
+                        itemCount: courseGrades.length,
+                        itemBuilder: (context, index) {
+                          var currentBox = courseGrades;
+                          List<CourseGrade> grades = currentBox.values.toList();
+                          grades.sort(
+                            (a, b) => getDate(b.dateString)
+                                .compareTo(getDate(a.dateString)),
+                          );
+                          CourseGrade gradeData = grades[index];
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: index == courseGrades.length - 1
+                                    ? 10
+                                    : 0, // Add extra padding to the last item
+                              ),
+                              child: ListTile(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        width: 1),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  tileColor: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  titleAlignment: ListTileTitleAlignment.center,
+                                  contentPadding:
+                                      EdgeInsets.only(left: 10, right: 20),
+                                  title: Text(
+                                    gradeData.course.length >= 30
+                                        ? '${gradeData.course}...'
+                                        : gradeData.course,
+                                    style: GoogleFonts.inter(fontSize: 16),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  splashColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  trailing: CircleAvatar(
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
+                                      child: Text(gradeData.grade,
+                                          style: GoogleFonts.inter(
+                                              shadows: [
+                                                Shadow(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground
+                                                        .withOpacity(0.3),
+                                                    offset: Offset(0, 0),
+                                                    blurRadius: 10)
+                                              ],
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold))),
+                                  onTap: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CourseDetailsPage(
+                                                      gradeData: gradeData),
+                                            ))
+                                      }));
+                        }))
               ],
             );
           }
