@@ -442,6 +442,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             Container(
                               alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
                               child: TextButton(
                                 child: Text("Privacy Policy"),
                                 onPressed: () async {

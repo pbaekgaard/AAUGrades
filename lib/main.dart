@@ -33,7 +33,7 @@ void callbackDispatcher() {
       debug: false,
     );
     await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
-    await StadsGradesProvider().fetchGrades();
+    StadsGradesProvider().fetchGrades();
     return Future.value(true);
   }));
 }
@@ -67,6 +67,8 @@ void main() async {
             create: (context) => ThemeService()),
         ChangeNotifierProvider<AuthProvider>(
             create: (context) => AuthProvider()),
+        ChangeNotifierProvider<StadsGradesProvider>(
+            create: (context) => StadsGradesProvider()),
       ],
       builder: (context, _) => MyApp(),
     ),
@@ -87,8 +89,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeDependencies() {
-    if (Provider.of<SettingsProvider>(context).fetchOnStartup) {
-      StadsGradesProvider().fetchGrades();
+    if (Provider.of<SettingsProvider>(context, listen: false).fetchOnStartup) {
+      Provider.of<StadsGradesProvider>(context, listen: false).fetchGrades();
     }
     super.didChangeDependencies();
   }
@@ -104,9 +106,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
     await Workmanager().registerPeriodicTask('fetchTask', 'backgroundFetch',
         frequency: Duration(
-            minutes: Provider.of<SettingsProvider>(context).fetchInterval),
+            minutes: Provider.of<SettingsProvider>(context, listen: false)
+                .fetchInterval),
         initialDelay: Duration(
-            minutes: Provider.of<SettingsProvider>(context).fetchInterval),
+            minutes: Provider.of<SettingsProvider>(context, listen: false)
+                .fetchInterval),
         constraints: Constraints(networkType: NetworkType.connected));
   }
 
@@ -119,14 +123,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      if (Provider.of<SettingsProvider>(context).fetchOnStartup) {
-        StadsGradesProvider().fetchGrades();
+      if (Provider.of<SettingsProvider>(context, listen: false)
+          .fetchOnStartup) {
+        Provider.of<StadsGradesProvider>(context, listen: false).fetchGrades();
       }
-      if (Provider.of<SettingsProvider>(context).autoFetchingEnabled) {
+      if (Provider.of<SettingsProvider>(context, listen: false)
+          .autoFetchingEnabled) {
         await stopBackgroundFetching();
       }
     } else if (state == AppLifecycleState.paused) {
-      if (Provider.of<SettingsProvider>(context).autoFetchingEnabled) {
+      if (Provider.of<SettingsProvider>(context, listen: false)
+          .autoFetchingEnabled) {
         await startBackgroundFetching();
       }
     }
@@ -153,15 +160,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -201,13 +199,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-
     final authProvider = Provider.of<AuthProvider>(context);
     signOut() async {
       await authProvider.logout();
@@ -244,7 +235,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: _selectedIndex != 2
                           ? IconButton(
                               onPressed: () async {
-                                await StadsGradesProvider().fetchGrades();
+                                Provider.of<StadsGradesProvider>(context,
+                                        listen: false)
+                                    .fetchGrades();
                               },
                               icon: const Icon(Icons.refresh))
                           : IconButton(

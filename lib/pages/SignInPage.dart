@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stads/providers/AuthProvider.dart';
+import 'package:stads/providers/StadsGradeProvider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -69,6 +70,10 @@ class _SignInPageState extends State<SignInPage> {
                           content: Text(authProvider.notificationMessage!),
                         ),
                       );
+                    } else {
+                      await Provider.of<StadsGradesProvider>(context,
+                              listen: false)
+                          .fetchGrades();
                     }
                   }
                 },
