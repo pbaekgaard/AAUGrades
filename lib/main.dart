@@ -147,7 +147,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       builder: (context, snapshot) {
         final themeManager = Provider.of<ThemeService>(context);
         return MaterialApp(
-          title: 'Overload',
+          title: 'AAU Grades',
           theme: light,
           darkTheme: dark,
           themeMode: themeManager.themeMode,
