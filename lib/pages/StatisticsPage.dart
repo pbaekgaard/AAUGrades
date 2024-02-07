@@ -135,28 +135,34 @@ class _StatisticsPageState extends State<StatisticsPage> {
           Theme.of(context).colorScheme.secondary,
       Theme.of(context).colorScheme.background
     ];
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(bottom: 18),
-          alignment: Alignment.centerLeft,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("Your",
-                style: GoogleFonts.inter(
-                    fontSize: 18,
-                    color: Theme.of(context).colorScheme.onSecondary)),
-            Text("Statistics",
-                style: GoogleFonts.inter(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onBackground))
-          ]),
-        ),
-        (dataPoints.isNotEmpty)
-            ? Expanded(
-                child: Container(
-                    child: Padding(
+    return (dataPoints.isEmpty)
+        ? Container(
+            child: Center(child: CircularProgressIndicator()),
+          )
+        : Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(bottom: 18),
+                alignment: Alignment.centerLeft,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Your",
+                          style: GoogleFonts.inter(
+                              fontSize: 18,
+                              color:
+                                  Theme.of(context).colorScheme.onSecondary)),
+                      Text("Statistics",
+                          style: GoogleFonts.inter(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  Theme.of(context).colorScheme.onBackground))
+                    ]),
+              ),
+              Expanded(
+                  child: Container(
+                      child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: LineChart(
                   LineChartData(
@@ -194,94 +200,96 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   curve: Curves.ease,
                   duration: Duration(milliseconds: 150),
                 ),
-              )))
-            : Center(child: Text("no data")),
-        Container(
-          height: 300,
-          padding: EdgeInsets.only(top: 24),
-          child: Column(children: [
-            /*
+              ))),
+              Container(
+                height: 300,
+                padding: EdgeInsets.only(top: 24),
+                child: Column(children: [
+                  /*
             
                 Number of passed ECTS
             
              */
-            Container(
-                padding: EdgeInsets.only(bottom: 15),
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Passed ECTS",
-                      style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "$passedECTS",
-                      style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    )
-                  ],
-                )),
-            /*
+                  Container(
+                      padding: EdgeInsets.only(bottom: 15),
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Passed ECTS",
+                            style: GoogleFonts.inter(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                fontSize: 18),
+                          ),
+                          Text(
+                            "$passedECTS",
+                            style: GoogleFonts.inter(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          )
+                        ],
+                      )),
+                  /*
             
                 Current Average Grade
 
              */
-            Container(
-                padding: EdgeInsets.only(bottom: 15),
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Average",
-                      style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "$currentAverage",
-                      style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    )
-                  ],
-                )),
+                  Container(
+                      padding: EdgeInsets.only(bottom: 15),
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Average",
+                            style: GoogleFonts.inter(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                fontSize: 18),
+                          ),
+                          Text(
+                            "$currentAverage",
+                            style: GoogleFonts.inter(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          )
+                        ],
+                      )),
 
-            /* 
+                  /* 
             
                 Weighed Average
             
             */
-            Container(
-                padding: EdgeInsets.only(bottom: 15),
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Weighed Average",
-                      style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "$weightedAverage",
-                      style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18),
-                    )
-                  ],
-                )),
-          ]),
-        ),
-      ],
-    );
+                  Container(
+                      padding: EdgeInsets.only(bottom: 15),
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Weighed Average",
+                            style: GoogleFonts.inter(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                fontSize: 18),
+                          ),
+                          Text(
+                            "$weightedAverage",
+                            style: GoogleFonts.inter(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          )
+                        ],
+                      )),
+                ]),
+              ),
+            ],
+          );
   }
 }
