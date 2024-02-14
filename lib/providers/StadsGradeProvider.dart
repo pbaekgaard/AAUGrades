@@ -91,95 +91,96 @@ class StadsGradesProvider extends ChangeNotifier {
           if (!(tableRows.length == box.length)) {
             int index = tableRows.length - 1;
             for (var row in tableRows.reversed) {
-              final courseName = unescape.convert(row.children[0].innerHtml);
-              if (!box.containsKey(courseName)) {
-                sendNotification = true;
-                notificationText = courseName;
-                String currentGradeSeason =
-                    getGradeSeason(row.children[1].innerHtml);
-                int semester;
+              final courseName =
+                  unescape.convert(row.children[0].innerHtml).trim();
+              if (box.containsKey(courseName)) {
+                box.delete(courseName);
+              }
+              sendNotification = true;
+              notificationText = courseName;
+              String currentGradeSeason =
+                  getGradeSeason(row.children[1].innerHtml);
+              int semester;
 
-                if (lastGradeSemester == -1) {
-                  lastGradeSemester = 0;
-                  semester = 0;
-                  lastGradeSeason = currentGradeSeason;
+              if (lastGradeSemester == -1) {
+                lastGradeSemester = 0;
+                semester = 0;
+                lastGradeSeason = currentGradeSeason;
+              } else {
+                if (currentGradeSeason == lastGradeSeason) {
+                  semester = lastGradeSemester;
                 } else {
-                  if (currentGradeSeason == lastGradeSeason) {
-                    semester = lastGradeSemester;
-                  } else {
-                    semester = ++lastGradeSemester;
-                    lastGradeSeason = currentGradeSeason;
-                  }
+                  semester = ++lastGradeSemester;
+                  lastGradeSeason = currentGradeSeason;
                 }
+              }
 
-                String ectsString = row.children[4].innerHtml;
-                if (ectsString.contains('&nbsp;')) {
-                  ectsString = ectsString.replaceAll('&nbsp;', '');
-                }
+              String ectsString = row.children[4].innerHtml;
+              if (ectsString.contains('&nbsp;')) {
+                ectsString = ectsString.replaceAll('&nbsp;', '');
+              }
 
-                /* 
+              /* 
                 
                     FETCHING EXTRA DETAILS ABOUT THE COURSE
                 
                  */
-                responseRaw = await dio.get(gradeDetailsUrl + 'id=${index}',
-                    options: Options(
-                      responseType: ResponseType.bytes,
-                    ));
-                var response = latin1.decode(responseRaw.data!);
-                var document = html.parse(response);
-                final grade = row.children[2].innerHtml;
-                final outerTable = document
-                    .getElementsByClassName('Resdetaljer')[0]
-                    .children[0];
-                int antal = 0;
-                List<int> gradeFrequencies = [];
-                List<String> gradeLabels = [];
-                var antalTd = outerTable.children[7].children[2];
-                antal = int.parse(antalTd.innerHtml);
-                var gradesTable = outerTable
-                    .children[outerTable.children.length - 1]
-                    .children[0]
-                    .children[1]
-                    .children[0]
-                    .children[0]
-                    .children[1]
-                    .children[0]
-                    .children[0];
-                var freqsTable = gradesTable.children[0];
-                var labelsTable =
-                    gradesTable.children[gradesTable.children.length - 1];
-                // Fetch Grade Frequencies
-                for (int i = 1; i <= freqsTable.children.length - 2; i++) {
-                  int freq = int.parse(freqsTable
-                      .children[i].children[0].attributes['title']!
-                      .substring(
-                          0,
-                          freqsTable
-                              .children[i].children[0].attributes['title']!
-                              .indexOf('(')));
-                  gradeFrequencies.add(freq);
-                }
-
-                // Fetch Grade Labels
-                for (int i = 1; i <= labelsTable.children.length - 2; i++) {
-                  gradeLabels.add(labelsTable.children[i].innerHtml);
-                }
-
-                final courseGrade = CourseGrade(
-                  course: unescape.convert(row.children[0].innerHtml).trim(),
-                  grade: grade,
-                  semester: semester,
-                  dateString: row.children[1].innerHtml,
-                  ECTS: double.parse(ectsString).toInt(),
-                  gradeFreqs: gradeFrequencies,
-                  amount: antal,
-                  gradeLabels: gradeLabels,
-                  include: true,
-                );
-                courses[row.children[0].innerHtml] = courseGrade;
-                box.put(courseName, courseGrade);
+              responseRaw = await dio.get(gradeDetailsUrl + 'id=${index}',
+                  options: Options(
+                    responseType: ResponseType.bytes,
+                  ));
+              var response = latin1.decode(responseRaw.data!);
+              var document = html.parse(response);
+              final grade = row.children[2].innerHtml;
+              final outerTable =
+                  document.getElementsByClassName('Resdetaljer')[0].children[0];
+              int antal = 0;
+              List<int> gradeFrequencies = [];
+              List<String> gradeLabels = [];
+              var antalTd = outerTable.children[7].children[2];
+              antal = int.parse(antalTd.innerHtml);
+              var gradesTable = outerTable
+                  .children[outerTable.children.length - 1]
+                  .children[0]
+                  .children[1]
+                  .children[0]
+                  .children[0]
+                  .children[1]
+                  .children[0]
+                  .children[0];
+              var freqsTable = gradesTable.children[0];
+              var labelsTable =
+                  gradesTable.children[gradesTable.children.length - 1];
+              // Fetch Grade Frequencies
+              for (int i = 1; i <= freqsTable.children.length - 2; i++) {
+                int freq = int.parse(freqsTable
+                    .children[i].children[0].attributes['title']!
+                    .substring(
+                        0,
+                        freqsTable.children[i].children[0].attributes['title']!
+                            .indexOf('(')));
+                gradeFrequencies.add(freq);
               }
+
+              // Fetch Grade Labels
+              for (int i = 1; i <= labelsTable.children.length - 2; i++) {
+                gradeLabels.add(labelsTable.children[i].innerHtml);
+              }
+
+              final courseGrade = CourseGrade(
+                course: unescape.convert(row.children[0].innerHtml).trim(),
+                grade: grade,
+                semester: semester,
+                dateString: row.children[1].innerHtml,
+                ECTS: double.parse(ectsString).toInt(),
+                gradeFreqs: gradeFrequencies,
+                amount: antal,
+                gradeLabels: gradeLabels,
+                include: true,
+              );
+              courses[row.children[0].innerHtml] = courseGrade;
+              box.put(courseName, courseGrade);
+
               index--;
             }
           }
