@@ -204,7 +204,9 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                             fontSize: 18),
                       ),
                       Text(
-                        widget.gradeData.amount.toString(),
+                        widget.gradeData.amount == 0
+                            ? "< 10"
+                            : widget.gradeData.amount.toString(),
                         style: GoogleFonts.inter(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -233,38 +235,42 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                       )
                     ],
                   )),
-              Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 25),
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Grade Frequencies",
-                          style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: BarChart(
-                          BarChartData(
-                            barTouchData: barTouchData,
-                            titlesData: titlesDataNumber,
-                            borderData: borderData,
-                            barGroups: barGroupsNumbers,
-                            gridData: const FlGridData(show: false),
-                            alignment: BarChartAlignment.spaceAround,
-                            maxY: widget.gradeData.gradeFreqs
-                                    .reduce(max)
-                                    .toDouble() *
-                                2 /
-                                1.5,
+              widget.gradeData.amount == 0
+                  ? Center(
+                      child: Text(
+                          "No statistics for grade with <10 participants."))
+                  : Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(top: 25),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Text(
+                              "Grade Frequencies",
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w500, fontSize: 18),
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: BarChart(
+                              BarChartData(
+                                barTouchData: barTouchData,
+                                titlesData: titlesDataNumber,
+                                borderData: borderData,
+                                barGroups: barGroupsNumbers,
+                                gridData: const FlGridData(show: false),
+                                alignment: BarChartAlignment.spaceAround,
+                                maxY: widget.gradeData.gradeFreqs
+                                        .reduce(max)
+                                        .toDouble() *
+                                    2 /
+                                    1.5,
+                              ),
+                            ),
+                          )
+                        ],
+                      )),
             ],
           ))
         ]),
