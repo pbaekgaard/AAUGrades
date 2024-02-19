@@ -42,7 +42,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(CourseGradeAdapter());
-  await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
+  var box = await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
   AwesomeNotifications().initialize(
     null,
     [
@@ -98,6 +98,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    Workmanager().cancelAll();
     super.dispose();
   }
 
@@ -201,6 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     signOut() async {
+      _selectedIndex = 1;
       await authProvider.logout();
     }
 
