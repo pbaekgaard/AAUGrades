@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
 import 'package:html/parser.dart' as html;
 import 'dart:io';
@@ -27,7 +29,125 @@ class StadsGradesProvider extends ChangeNotifier {
     ));
   }
 
+  void clearDb() async {
+    Box<CourseGrade> box = Hive.box(HiveBoxes.coursegrades);
+    box.clear();
+    weightedAverage = 0;
+    passedECTS = 0;
+    dataPoints = [];
+    courseGradesList = [];
+    maxAverage = 0;
+    currentAverage = 0;
+
+    notifyListeners();
+  }
+
   bool currentlyFetching = false;
+  bool isUpdatingStats = false;
+  double weightedAverage = 0;
+  int passedECTS = 0;
+  List<FlSpot> dataPoints = [];
+  List<CourseGrade> courseGradesList = [];
+  double maxAverage = 0;
+  double currentAverage = 0;
+
+  Future<void> updateStats() async {
+    Box<CourseGrade> courseGradeBox = await Hive.box(HiveBoxes.coursegrades);
+    if (!isUpdatingStats) {
+      isUpdatingStats = true;
+      courseGradesList = courseGradeBox.values.toList();
+      courseGradesList.sort(
+        (a, b) => getDate(b.dateString).compareTo(getDate(a.dateString)),
+      );
+      int passedectses = await calculateECTS();
+      double wAverage = await calculateWeightedAverage();
+      List<FlSpot> dPoints = await calculateAveragePoints();
+      isUpdatingStats = false;
+      passedECTS = passedectses;
+      weightedAverage = wAverage;
+      dataPoints = dPoints;
+      isUpdatingStats = false;
+      notifyListeners();
+    }
+  }
+
+  DateTime getDate(String stringDate) {
+    String day = stringDate.substring(0, 2);
+    String month = stringDate.substring(3, 5);
+    String year = stringDate.substring(6, 10);
+    String date = "$year-$month-$day";
+    DateTime asDate = DateTime.parse(date);
+    return asDate;
+  }
+
+  Future<int> calculateECTS() async {
+    passedECTS = 0;
+    for (CourseGrade grade in courseGradesList) {
+      if (grade.include) {
+        passedECTS += grade.ECTS;
+      }
+    }
+    return passedECTS;
+  }
+
+  Future<double> calculateWeightedAverage() async {
+    double weightedTotal = 0;
+    double totalECTS = 0;
+    for (CourseGrade grade in courseGradesList) {
+      if (grade.include) {
+        double score = double.tryParse(grade.grade) ?? 0;
+        if (score != 0) {
+          totalECTS += grade.ECTS;
+          weightedTotal += score * grade.ECTS;
+        }
+      }
+    }
+
+    weightedAverage =
+        double.parse((weightedTotal / totalECTS).toStringAsFixed(2));
+    return weightedAverage;
+  }
+
+  Future<List<FlSpot>> calculateAveragePoints() async {
+    List<FlSpot> dPoints = [];
+    _isNumeric(String string) {
+      final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+      return numericRegex.hasMatch(string);
+    }
+
+    if (courseGradesList.isNotEmpty) {
+      double minSemester = courseGradesList.last.semester.toDouble();
+      double maxSemester = courseGradesList.first.semester.toDouble();
+
+      for (double i = minSemester; i <= maxSemester; i++) {
+        double totalSum = 0;
+        double gradeCount = 0;
+        for (CourseGrade grade in courseGradesList) {
+          if (grade.include) {
+            if (grade.semester <= i) {
+              double gradeVal;
+              if (_isNumeric(grade.grade)) {
+                gradeVal = double.tryParse(grade.grade) ?? 0;
+                if (gradeVal != 0) {
+                  gradeCount++;
+                }
+                totalSum += gradeVal;
+              }
+            }
+          }
+        }
+
+        double semesterAverage = (gradeCount > 0) ? totalSum / gradeCount : 0;
+        semesterAverage = double.parse(semesterAverage.toStringAsFixed(2));
+        if (semesterAverage > maxAverage) {
+          maxAverage = semesterAverage;
+        }
+        currentAverage = semesterAverage;
+        dPoints.add(FlSpot(i, semesterAverage));
+      }
+    }
+    return dPoints;
+  }
 
   // Grade Fetcher
   Future<bool> fetchGrades() async {
@@ -190,12 +310,21 @@ class StadsGradesProvider extends ChangeNotifier {
                     if (box.get(courseName)!.dateString !=
                         courseGrade.dateString) {
                       rexamFound = true;
+                      var oldGrade = box.get(courseName);
+                      oldGrade!.include = false;
+                      oldGrade.save();
                     }
                     while (box.containsKey("$courseName$courseKeyIndex") &&
                         !rexamFound) {
                       if (box.get("$courseName$courseKeyIndex")!.dateString !=
                           courseGrade.dateString) {
                         rexamFound = true;
+                        int oldIndexes = 0;
+                        while (box.containsKey("$courseName$oldIndexes")) {
+                          var oldGrade = box.get("$courseName$oldIndexes");
+                          oldGrade!.include = false;
+                          oldGrade.save();
+                        }
                       } else {
                         rexamFound = false;
                       }
@@ -234,6 +363,7 @@ class StadsGradesProvider extends ChangeNotifier {
               SendGradeNotification(notificationText);
               dio.close();
             }
+            await updateStats();
             notifyListeners();
           } catch (e) {
             currentlyFetching = false;
