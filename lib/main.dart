@@ -43,19 +43,6 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(CourseGradeAdapter());
   var box = await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
-  box.put(
-      'Databasesystemer',
-      CourseGrade(
-        course: 'Databasesystemer',
-        grade: "12",
-        semester: 6,
-        dateString: "06.07.2023",
-        ECTS: 5,
-        gradeFreqs: [],
-        amount: 0,
-        gradeLabels: [],
-        include: true,
-      ));
   AwesomeNotifications().initialize(
     null,
     [
