@@ -55,11 +55,6 @@ class _SettingsPageState extends State<SettingsPage> {
     print(_settingsProvider.autoFetchingEnabled);
   }
 
-  void _clearDb() async {
-    Box<CourseGrade> box = Hive.box(HiveBoxes.coursegrades);
-    box.clear();
-  }
-
   void _getAppVersion() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -523,7 +518,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               TextButton(
                                 child: Text("Clear DB"),
-                                onPressed: _clearDb,
+                                onPressed: Provider.of<StadsGradesProvider>(context, listen: false).clearDb,
                                 style: ButtonStyle(
                                     overlayColor: MaterialStateProperty.all(
                                         Theme.of(context).colorScheme.primary),
