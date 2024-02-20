@@ -42,7 +42,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(CourseGradeAdapter());
-  var box = await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
+  await Hive.openBox<CourseGrade>(HiveBoxes.coursegrades);
   AwesomeNotifications().initialize(
     null,
     [

@@ -172,56 +172,54 @@ class _SettingsPageState extends State<SettingsPage> {
                                 },
                               )
                             ]),
-                        Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Fetching interval",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    ),
-                                    Text(
-                                      "Interval to fetch grades",
-                                      style: GoogleFonts.inter(
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ],
-                                ),
-                                DropdownButtonHideUnderline(
-                                    child: DropdownButton(
-                                  padding:
-                                      const EdgeInsetsDirectional.only(end: 14),
-                                  iconSize: 0,
-                                  alignment: AlignmentDirectional.centerEnd,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                  items: autoFetchOptions,
-                                  isExpanded: false,
-                                  value: selectedFetchInterval,
-                                  onChanged: (value) => {
-                                    setState(
-                                      () {
-                                        selectedFetchInterval = value;
-                                        _settingsProvider.fetchInterval = value;
-                                      },
-                                    )
-                                  },
-                                ))
-                              ]),
-                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Fetching interval",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                  Text(
+                                    "Interval to fetch grades",
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  )
+                                ],
+                              ),
+                              DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                padding:
+                                    const EdgeInsetsDirectional.only(end: 14),
+                                iconSize: 0,
+                                alignment: AlignmentDirectional.centerEnd,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                                items: autoFetchOptions,
+                                isExpanded: false,
+                                value: selectedFetchInterval,
+                                onChanged: (value) => {
+                                  setState(
+                                    () {
+                                      selectedFetchInterval = value;
+                                      _settingsProvider.fetchInterval = value;
+                                    },
+                                  )
+                                },
+                              ))
+                            ]),
                       ],
                     )
                   ],
@@ -240,50 +238,48 @@ class _SettingsPageState extends State<SettingsPage> {
                                 fontSize: 20)),
                         Column(
                           children: [
-                            Container(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Notifications on new grades",
-                                            style: GoogleFonts.inter(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          ),
-                                          Text(
-                                            "Get a notification when you have received a new grade on STADS!",
-                                            textAlign: TextAlign.left,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 12,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Checkbox(
-                                      value: notificationsEnabled,
-                                      onChanged: (value) => {
-                                        setState(
-                                          () {
-                                            notificationsEnabled = value!;
-                                            _settingsProvider
-                                                .notificationsEnabled = value;
-                                          },
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Notifications on new grades",
+                                          style: GoogleFonts.inter(
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
+                                        ),
+                                        Text(
+                                          "Get a notification when you have received a new grade on STADS!",
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.inter(
+                                              fontSize: 12,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
                                         )
-                                      },
+                                      ],
                                     ),
-                                  ]),
-                            ),
+                                  ),
+                                  Checkbox(
+                                    value: notificationsEnabled,
+                                    onChanged: (value) => {
+                                      setState(
+                                        () {
+                                          notificationsEnabled = value!;
+                                          _settingsProvider
+                                              .notificationsEnabled = value;
+                                        },
+                                      )
+                                    },
+                                  ),
+                                ]),
                           ],
                         )
                       ],
@@ -396,45 +392,43 @@ class _SettingsPageState extends State<SettingsPage> {
                                 fontSize: 20)),
                         Column(
                           children: [
-                            Container(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Version",
-                                            style: GoogleFonts.inter(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          ),
-                                          Text(
-                                            "Your current version of AAU Grades.",
-                                            textAlign: TextAlign.left,
-                                            style: GoogleFonts.inter(
-                                                fontSize: 12,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground),
-                                          )
-                                        ],
-                                      ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Version",
+                                          style: GoogleFonts.inter(
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
+                                        ),
+                                        Text(
+                                          "Your current version of AAU Grades.",
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.inter(
+                                              fontSize: 12,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      _version ?? '-',
-                                      style: GoogleFonts.inter(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onBackground),
-                                    )
-                                  ]),
-                            ),
+                                  ),
+                                  Text(
+                                    _version ?? '-',
+                                    style: GoogleFonts.inter(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  )
+                                ]),
                             Container(
                               alignment: Alignment.centerLeft,
                               padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -518,7 +512,10 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                               TextButton(
                                 child: Text("Clear DB"),
-                                onPressed: Provider.of<StadsGradesProvider>(context, listen: false).clearDb,
+                                onPressed: Provider.of<StadsGradesProvider>(
+                                        context,
+                                        listen: false)
+                                    .clearDb,
                                 style: ButtonStyle(
                                     overlayColor: MaterialStateProperty.all(
                                         Theme.of(context).colorScheme.primary),

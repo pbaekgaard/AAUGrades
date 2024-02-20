@@ -9,7 +9,7 @@ import 'dart:math';
 import 'package:stads/boxes/boxes.dart';
 
 class CourseDetailsPage extends StatefulWidget {
-  CourseGrade gradeData; // Updated parameter
+  final CourseGrade gradeData; // Updated parameter
 
   CourseDetailsPage({required this.gradeData});
 
@@ -180,16 +180,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
             Course Details
           
           */
-          Container(
-              child:
-                  /*
-                  
-                    Details for Number Grades
-
-                    e.g. 12
-                  
-                   */
-                  Column(
+          Column(
             children: [
               Container(
                   padding: EdgeInsets.only(bottom: 15),
@@ -236,20 +227,18 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                     ],
                   )),
               widget.gradeData.amount == 0
-                  ? Center(
+                  ? const Center(
                       child: Text(
                           "No statistics for grade with <10 participants."))
                   : Container(
                       alignment: Alignment.center,
-                      padding: EdgeInsets.only(top: 25),
+                      padding: const EdgeInsets.only(top: 25),
                       child: Column(
                         children: [
-                          Container(
-                            child: Text(
-                              "Grade Frequencies",
-                              style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.w500, fontSize: 18),
-                            ),
+                          Text(
+                            "Grade Frequencies",
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w500, fontSize: 18),
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 3,
@@ -272,7 +261,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                         ],
                       )),
             ],
-          ))
+          )
         ]),
       ),
     );

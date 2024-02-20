@@ -2,11 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:stads/boxes/boxes.dart';
-import 'package:stads/classes/coursegrade.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:stads/providers/StadsGradeProvider.dart';
 
@@ -55,11 +51,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 ? const Center(
                     child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          "You currently have no grades, or they are being fetched!"),
-                      CircularProgressIndicator()
-                    ],
+                    children: [CircularProgressIndicator()],
                   ))
                 : Column(
                     children: [
@@ -85,8 +77,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             ]),
                       ),
                       Expanded(
-                          child: Container(
-                              child: Padding(
+                          child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: LineChart(
                           LineChartData(
@@ -127,7 +118,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                           curve: Curves.ease,
                           duration: Duration(milliseconds: 150),
                         ),
-                      ))),
+                      )),
                       Container(
                         height: 300,
                         padding: EdgeInsets.only(top: 24),
