@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/rendering.dart';
 import 'package:html/parser.dart' as html;
 import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -52,7 +51,7 @@ class StadsGradesProvider extends ChangeNotifier {
   double currentAverage = 0;
 
   Future<void> updateStats() async {
-    Box<CourseGrade> courseGradeBox = await Hive.box(HiveBoxes.coursegrades);
+    Box<CourseGrade> courseGradeBox = Hive.box(HiveBoxes.coursegrades);
     if (!isUpdatingStats) {
       isUpdatingStats = true;
       courseGradesList = courseGradeBox.values.toList();
@@ -108,6 +107,15 @@ class StadsGradesProvider extends ChangeNotifier {
     return weightedAverage;
   }
 
+  void notifyListenersDelayed() {
+    // Delay notification to avoid calling during initial build phase
+    Future.microtask(() {
+      if (hasListeners) {
+        notifyListeners();
+      }
+    });
+  }
+
   Future<List<FlSpot>> calculateAveragePoints() async {
     List<FlSpot> dPoints = [];
     _isNumeric(String string) {
@@ -153,6 +161,7 @@ class StadsGradesProvider extends ChangeNotifier {
   Future<bool> fetchGrades() async {
     if (!currentlyFetching) {
       currentlyFetching = true;
+      notifyListenersDelayed();
       var unescape = HtmlUnescape();
       Box<CourseGrade> box = Hive.box<CourseGrade>(HiveBoxes.coursegrades);
       const String gradesPage =
@@ -364,6 +373,7 @@ class StadsGradesProvider extends ChangeNotifier {
               dio.close();
             }
             await updateStats();
+            currentlyFetching = false;
             notifyListeners();
           } catch (e) {
             currentlyFetching = false;
