@@ -76,8 +76,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             padding: const EdgeInsets.all(16.0),
                             child: LineChart(
                               LineChartData(
-                                titlesData: FlTitlesData(show: false),
-                                gridData: FlGridData(show: false),
+                                titlesData:  const FlTitlesData(show: false),
+                                gridData: const FlGridData(show: false),
                                 borderData: FlBorderData(show: false),
                                 minX: 0,
                                 maxX: gradeProvider.dataPoints!.length

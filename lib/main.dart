@@ -143,6 +143,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return ChangeNotifierProvider<ThemeService>(
       create: (context) => ThemeService(),
       builder: (context, snapshot) {
