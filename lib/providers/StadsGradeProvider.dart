@@ -223,8 +223,8 @@ class StadsGradesProvider extends ChangeNotifier {
             }
 
             if (!(tableRows.length == box.length)) {
-              int index = tableRows.length - 1;
-              for (var row in tableRows.reversed) {
+              int index = 0;
+              for (var row in tableRows) {
                 final courseName =
                     unescape.convert(row.children[0].innerHtml).trim();
                 int courseKeyIndex = 0;
@@ -364,7 +364,7 @@ class StadsGradesProvider extends ChangeNotifier {
                       rexamFound ? "$courseName$courseKeyIndex" : courseName,
                       courseGrade);
                 }
-                index--;
+                index = index < tableRows.length ? index + 1 : index;
               }
             }
 
