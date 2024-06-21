@@ -122,11 +122,10 @@ class StadsGradesProvider extends ChangeNotifier {
       final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
       return numericRegex.hasMatch(string);
     }
-
     if (courseGradesList.isNotEmpty) {
-      double minSemester = courseGradesList.last.semester.toDouble();
-      double maxSemester = courseGradesList.first.semester.toDouble();
-
+      double maxSemester = courseGradesList.last.semester.toDouble();
+      double minSemester = courseGradesList.first.semester.toDouble();
+      print(maxSemester);
       for (double i = minSemester; i <= maxSemester; i++) {
         double totalSum = 0;
         double gradeCount = 0;
@@ -144,7 +143,7 @@ class StadsGradesProvider extends ChangeNotifier {
             }
           }
         }
-
+        print("hello");
         double semesterAverage = (gradeCount > 0) ? totalSum / gradeCount : 0;
         semesterAverage = double.parse(semesterAverage.toStringAsFixed(2));
         if (semesterAverage > maxAverage) {
@@ -369,7 +368,12 @@ class StadsGradesProvider extends ChangeNotifier {
             }
 
             if (sendNotification && SettingsProvider().notificationsEnabled) {
-              SendGradeNotification(notificationText);
+              final myBox = box.values.toList();
+              // Sort grades by latest date first.
+              myBox.sort(
+                (a, b) => getDate(b.dateString).compareTo(getDate(a.dateString)),
+              );
+              SendGradeNotification(myBox[0].course);
               dio.close();
             }
             await updateStats();
